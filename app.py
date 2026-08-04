@@ -1,6 +1,7 @@
 """
 AnotIA - Asistente de Redacción de Anotaciones Pedagógicas con RICE e IA
 Prototipo MVP construido con Streamlit y la API de Google Gemini (google-genai).
+Estilo Minimalista SaaS (Notion AI / Linear / OpenAI)
 """
 
 import streamlit as st
@@ -27,67 +28,83 @@ IMAGE_LOGO = "Logo anotIA.png"
 IMAGE_GRAFICOS = "grafico.png"
 
 # =========================================================
-# ESTILOS CSS CON TEXTO NEGRO EN EL FONDO PRINCIPAL
+# ESTILOS CSS - ESTILO SAAS MODERNO (LINEAR / NOTION AI)
 # =========================================================
 st.markdown("""
 <style>
-    /* 1. Fondo general (#F8FAFC) y Texto Negro (#000000) */
-    .stApp, .stApp p, .stApp span, .stApp div, .stApp li {
-        color: #000000 !important; 
-    }
-
+    /* 1. Fondo General con Gradiente Radial Tecnológico */
     .stApp {
-        background-color: #F8FAFC;
+        background: radial-gradient(circle at top right, rgba(109, 93, 246, 0.12), transparent 30%), #FAFBFF !important;
+        color: #1F2937 !important;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
 
-    /* 2. Títulos y Encabezados en Negro */
+    /* 2. Encabezados y Tipografía General */
     h1, h2, h3, h4, h5, h6 {
-        color: #000000 !important;
-        font-weight: 800 !important;
+        color: #1F2937 !important;
+        font-weight: 700 !important;
+        letter-spacing: -0.02em !important;
+    }
+    p, span, label, div, li {
+        color: #1F2937;
     }
 
-    /* 3. Subtítulo Banner superior */
-    .sub-title {
-        color: #000000 !important;
-        font-size: 1.15rem !important;
-        font-weight: 600 !important;
-        margin-top: 0.25rem;
-        margin-bottom: 1.5rem;
-        background-color: #FFFFFF;
-        padding: 10px 20px;
-        border-radius: 10px;
-        display: inline-block;
-        border: 1px solid #CBD5E1;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    }
-
-    /* 4. Insignia / Badge Superior */
-    .badge-tag {
-        background-color: #4F46E5;
-        color: #FFFFFF !important;
-        padding: 6px 14px;
-        border-radius: 20px;
-        font-size: 0.85rem;
+    /* 3. Logo con estilo tipográfico SaaS (anot en #1F2937, IA con Gradiente) */
+    .logo-container {
+        font-size: 2.2rem;
         font-weight: 800;
-        letter-spacing: 0.5px;
+        letter-spacing: -0.04em;
+        margin-bottom: 0.2rem;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .logo-anot {
+        color: #1F2937;
+    }
+    .logo-ia {
+        background: linear-gradient(135deg, #6D5DF6 0%, #3B82F6 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    /* 4. Subtítulo Banner Superior */
+    .sub-title {
+        color: #6B7280 !important;
+        font-size: 1.05rem !important;
+        font-weight: 500 !important;
+        margin-top: 0rem;
+        margin-bottom: 1.5rem;
+    }
+
+    /* 5. Insignia / Badge Superior */
+    .badge-tag {
+        background: rgba(109, 93, 246, 0.1);
+        color: #6D5DF6 !important;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.03em;
         display: inline-block;
         margin-bottom: 12px;
+        border: 1px solid rgba(109, 93, 246, 0.2);
     }
 
-    /* 5. Tarjetas contenedoras (#FFFFFF con sombra suave) */
+    /* 6. Tarjetas Clean (#FFFFFF, Bordes #E5E7EB, Sombra Suave) */
     div[data-testid="stColumn"] {
-        background-color: #FFFFFF;
-        padding: 22px;
-        border-radius: 14px;
-        border: 1px solid #CBD5E1;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        background-color: #FFFFFF !important;
+        padding: 24px !important;
+        border-radius: 18px !important;
+        border: 1px solid #E5E7EB !important;
+        box-shadow: 0 10px 35px rgba(0, 0, 0, 0.04) !important;
         margin-bottom: 16px;
     }
 
-    /* 6. Sidebar en Azul Slate Oscuro (#0F172A) con letras blancas */
+    /* 7. Sidebar Oscuro (#111827) de Alta Elegancia */
     section[data-testid="stSidebar"] {
-        background-color: #0F172A;
-        border-right: 1px solid #1E293B;
+        background-color: #111827 !important;
+        border-right: 1px solid #1F2937 !important;
     }
     section[data-testid="stSidebar"] h1, 
     section[data-testid="stSidebar"] h2, 
@@ -100,121 +117,146 @@ st.markdown("""
     section[data-testid="stSidebar"] span {
         color: #FFFFFF !important;
     }
+    section[data-testid="stSidebar"] .stCaption {
+        color: #9CA3AF !important;
+    }
 
-    /* Tarjeta informativa dentro del Sidebar */
+    /* Tarjeta Informativa dentro del Sidebar */
     .sidebar-info-box {
-        background-color: #FFFFFF;
-        border-radius: 10px;
+        background-color: #1F2937;
+        border-radius: 12px;
         padding: 14px;
-        border-left: 4px solid #4F46E5;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        border: 1px solid #374151;
+        color: #E5E7EB !important;
+        font-size: 0.88rem;
+        line-height: 1.5;
         margin-bottom: 15px;
     }
-    .sidebar-info-box p, .sidebar-info-box strong {
-        color: #000000 !important;
+    .sidebar-info-box strong {
+        color: #8B5CF6 !important;
     }
 
-    /* 7. Zona de Carga PDF (RICE) */
+    /* 8. Carga de Archivos RICE (PDF Uploader) */
     .stFileUploader section {
-        background-color: #F1F5F9 !important;
-        border: 2px dashed #6366F1 !important;
-        border-radius: 10px !important;
-        padding: 12px !important;
+        background-color: #1F2937 !important;
+        border: 2px dashed #374151 !important;
+        border-radius: 12px !important;
+        padding: 14px !important;
     }
     .stFileUploader section div, 
     .stFileUploader section span, 
     .stFileUploader section small,
     .stFileUploader section p {
-        color: #000000 !important;
-        font-weight: 600 !important;
+        color: #9CA3AF !important;
+        font-weight: 500 !important;
     }
 
-    /* 8. Pestañas de navegación (Tabs) */
+    /* 9. Pestañas de Navegación (Tabs Estilo Notion/Linear) */
     .stTabs [data-baseweb="tab-list"] {
         gap: 8px;
         background-color: transparent;
         padding: 4px;
-        border-bottom: 2px solid #CBD5E1;
+        border-bottom: 1px solid #E5E7EB;
+        margin-bottom: 20px;
     }
     .stTabs [data-baseweb="tab"] {
-        height: 44px;
-        border-radius: 8px 8px 0px 0px;
-        padding-left: 16px;
-        padding-right: 16px;
-        background-color: transparent;
-        border: none;
-        font-weight: 700;
-        font-size: 0.95rem;
-        color: #475569 !important;
-        white-space: nowrap;
+        height: 42px;
+        border-radius: 10px;
+        padding-left: 18px;
+        padding-right: 18px;
+        background-color: #FFFFFF;
+        border: 1px solid #E5E7EB;
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: #6B7280 !important;
+        transition: all 0.2s ease;
+    }
+    .stTabs [data-baseweb="tab"]:hover {
+        background-color: #F3F4F6 !important;
+        color: #1F2937 !important;
     }
     .stTabs [aria-selected="true"] {
-        background-color: #EEF2FF !important;
-        border-bottom: 3px solid #4F46E5 !important;
-        color: #4F46E5 !important;
+        background-color: #6D5DF6 !important;
+        border-color: #6D5DF6 !important;
+        color: #FFFFFF !important;
+        box-shadow: 0 4px 14px rgba(109, 93, 246, 0.3) !important;
     }
 
-    /* 9. Botón Principal (Letra Blanca) */
+    /* 10. Botón Principal con Gradiente Morado (#6D5DF6 -> #3B82F6) */
     .stButton>button {
-        background-color: #4F46E5 !important;
+        background: linear-gradient(90deg, #6D5DF6 0%, #3B82F6 100%) !important;
         color: #FFFFFF !important;
-        font-weight: 800 !important;
-        font-size: 1.05rem !important;
-        border-radius: 10px !important;
-        padding: 0.75rem 1.25rem !important;
+        font-weight: 700 !important;
+        font-size: 0.98rem !important;
+        border-radius: 12px !important;
+        padding: 0.75rem 1.5rem !important;
         border: none !important;
-        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25) !important;
-        transition: all 0.2s ease-in-out !important;
+        box-shadow: 0 4px 14px rgba(109, 93, 246, 0.25) !important;
+        transition: all 0.25s ease-in-out !important;
     }
     .stButton>button:hover {
-        background-color: #4338CA !important;
-        box-shadow: 0 6px 16px rgba(79, 70, 229, 0.35) !important;
+        background: linear-gradient(90deg, #7C6CFF 0%, #408AF8 100%) !important;
+        box-shadow: 0 10px 30px rgba(109, 93, 246, 0.35) !important;
+        transform: translateY(-1px);
         color: #FFFFFF !important;
     }
 
-    /* 10. Entradas de texto y selects en negro */
+    /* 11. Entradas de Texto, Radios y Selects */
     .stTextArea textarea, .stSelectbox div[data-baseweb="select"] {
         background-color: #FFFFFF !important;
-        color: #000000 !important;
-        border-radius: 8px !important;
-        border: 1px solid #CBD5E1 !important;
+        color: #1F2937 !important;
+        border-radius: 12px !important;
+        border: 1px solid #D1D5DB !important;
+        transition: all 0.2s ease;
     }
     .stTextArea textarea:focus, .stSelectbox div[data-baseweb="select"]:focus-within {
-        border-color: #4F46E5 !important;
-        box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.15) !important;
+        border-color: #6D5DF6 !important;
+        box-shadow: 0 0 0 4px rgba(109, 93, 246, 0.18) !important;
     }
     label {
-        color: #000000 !important;
-        font-weight: 700 !important;
+        color: #1F2937 !important;
+        font-weight: 600 !important;
+        font-size: 0.92rem !important;
     }
 
-    /* 11. Ajustes Responsivos para Móviles */
+    /* 12. Alertas Estilo Minimalista SaaS */
+    .stAlert {
+        border-radius: 12px !important;
+        border: none !important;
+    }
+    div[data-baseweb="notification"] {
+        border-radius: 12px !important;
+    }
+
+    /* 13. Responsividad */
     @media (max-width: 768px) {
-        .sub-title {
-            font-size: 0.95rem !important;
-            padding: 8px 14px;
-        }
         div[data-testid="stColumn"] {
-            padding: 14px;
+            padding: 16px !important;
         }
         .stTabs [data-baseweb="tab"] {
-            padding-left: 10px;
-            padding-right: 10px;
-            font-size: 0.85rem;
+            padding-left: 12px;
+            padding-right: 12px;
+            font-size: 0.82rem;
         }
     }
 </style>
 """, unsafe_allow_html=True)
 
-# Sidebar - Descripción de la herramienta y ajustes
+# Sidebar - Estilo Dark SaaS (#111827)
 with st.sidebar:
+    st.markdown("""
+    <div class="logo-container" style="margin-bottom: 12px;">
+        <span class="logo-anot" style="color: #FFFFFF;">anot</span><span class="logo-ia">IA</span>
+    </div>
+    """, unsafe_allow_html=True)
+    
     st.markdown('<span class="badge-tag">ASISTENTE DOCENTE IA</span>', unsafe_allow_html=True)
     st.subheader("💡 ¿Qué es AnotIA?")
     
     st.markdown("""
     <div class="sidebar-info-box">
-        <p><strong>AnotIA</strong> optimiza el trabajo administrativo docente convirtiendo notas rápidas 
-        en redacciones formales, pedagógicas y alineadas al <strong>Reglamento Interno (RICE)</strong> de tu colegio.</p>
+        <strong>AnotIA</strong> optimiza el trabajo administrativo docente convirtiendo notas rápidas 
+        en redacciones formales, pedagógicas y alineadas al <strong>Reglamento Interno (RICE)</strong> de tu colegio.
     </div>
     """, unsafe_allow_html=True)
     
@@ -237,43 +279,33 @@ with st.sidebar:
     )
     
     st.markdown("---")
-    st.caption("AnotIA v4.2 • Texto Negro de Alto Contraste")
+    st.caption("AnotIA v5.0 •")
 
 # Obtener la API Key exclusivamente de los Secrets del Servidor
 api_key_input = st.secrets.get("GEMINI_API_KEY", "")
 
-# Encabezado Principal con Logo
+# Encabezado Principal
 if os.path.exists(IMAGE_LOGO):
-    st.image(IMAGE_LOGO, width=280)
+    st.image(IMAGE_LOGO, width=240)
 else:
-    st.markdown("## ✏️ **AnotIA**")
+    st.markdown("""
+    <div class="logo-container">
+        <span class="logo-anot">anot</span><span class="logo-ia">IA</span>
+    </div>
+    """, unsafe_allow_html=True)
 
-st.markdown('<p class="sub-title"><i>"Menos tiempo redactando, más tiempo enseñando."</i></p>', unsafe_allow_html=True)
+st.markdown('<p class="sub-title"><i>Menos escritura. Más tiempo para enseñar.</i></p>', unsafe_allow_html=True)
 
-# Pestañas Principales (Gráficos Primero)
-tab_graficos, tab_generador, tab_historial, tab_favoritos = st.tabs([
-    "📊 Gráficos y Modelo Pedagógico", 
+# Pestañas Principales (Tabs)
+tab_generador, tab_graficos, tab_historial, tab_favoritos = st.tabs([
     "📝 Generador", 
-    "📜 Historial Reciente", 
+    "📊 Estadísticas y Modelo", 
+    "📜 Historial", 
     "⭐ Favoritos"
 ])
 
 # ----------------------------------------------------
-# PESTAÑA 1: FOTO DE GRÁFICOS / MODELO PEDAGÓGICO
-# ----------------------------------------------------
-with tab_graficos:
-    st.subheader("📈 Esquema Pedagógico y Gráficos de Referencia")
-    st.write("Visualización del marco conceptual y flujo metodológico aplicado por AnotIA para el análisis de convivencia y RICE.")
-    
-    if os.path.exists(IMAGE_GRAFICOS):
-        col_img1, col_img2, col_img3 = st.columns([1, 2, 1])
-        with col_img2:
-            st.image(IMAGE_GRAFICOS, use_container_width=True, caption="Esquema y Referencia Visual del Sistema AnotIA")
-    else:
-        st.warning(f"⚠️ Guarda la imagen de tus gráficos como `{IMAGE_GRAFICOS}` en GitHub para visualizarla aquí.")
-
-# ----------------------------------------------------
-# PESTAÑA 2: GENERADOR PRINCIPAL
+# PESTAÑA 1: GENERADOR PRINCIPAL
 # ----------------------------------------------------
 with tab_generador:
     col1, col2 = st.columns([1, 1], gap="large")
@@ -306,7 +338,7 @@ with tab_generador:
             placeholder="Ej: Durante la actividad de lenguaje, el alumno interrumpe constantemente a sus compañeros, se niega a realizar la guía y responde de forma desafiante al solicitárselo."
         )
 
-        generar_btn = st.button("🚀 Generar Redacción Profesional", use_container_width=True)
+        generar_btn = st.button("✨ Generar Redacción Profesional", use_container_width=True)
 
     with col2:
         st.subheader("📄 Propuesta de Redacción y Cita RICE")
@@ -426,6 +458,20 @@ with tab_generador:
 
         else:
             st.info("👈 Selecciona el tipo de registro, ingresa los detalles y presiona el botón para generar.")
+
+# ----------------------------------------------------
+# PESTAÑA 2: FOTO DE GRÁFICOS / MODELO PEDAGÓGICO
+# ----------------------------------------------------
+with tab_graficos:
+    st.subheader("📈 Esquema Pedagógico y Gráficos de Referencia")
+    st.write("Visualización del marco conceptual y flujo metodológico aplicado por AnotIA para el análisis de convivencia y RICE.")
+    
+    if os.path.exists(IMAGE_GRAFICOS):
+        col_img1, col_img2, col_img3 = st.columns([1, 2, 1])
+        with col_img2:
+            st.image(IMAGE_GRAFICOS, use_container_width=True, caption="Esquema y Referencia Visual del Sistema AnotIA")
+    else:
+        st.warning(f"⚠️ Guarda la imagen de tus gráficos como `{IMAGE_GRAFICOS}` en GitHub para visualizarla aquí.")
 
 # ----------------------------------------------------
 # PESTAÑA 3: HISTORIAL RECIENTE
