@@ -27,7 +27,7 @@ IMAGE_LOGO = "Logo anotIA.png"
 IMAGE_GRAFICOS = "grafico.png"
 
 # =========================================================
-# ESTILOS CSS RESPONSIVE Y ALTO CONTRASTE (OPTIMIZADO MÓVIL)
+# ESTILOS CSS CON FONDO #939699 Y TARJETAS #ACAEB0 (RESPONSIVE)
 # =========================================================
 st.markdown("""
 <style>
@@ -45,15 +45,16 @@ st.markdown("""
     
     /* Subtítulo de bienvenida */
     .sub-title {
-        color: #1E293B !important;
+        color: #0F172A !important;
         font-size: 1.15rem !important;
         font-weight: 700 !important;
         margin-top: 0.25rem;
         margin-bottom: 1.25rem;
-        background-color: rgba(255, 255, 255, 0.9);
+        background-color: #ACAEB0;
         padding: 8px 16px;
         border-radius: 8px;
         display: inline-block;
+        border: 1px solid #7D8083;
     }
 
     /* Etiqueta / Insignia superior */
@@ -87,10 +88,10 @@ st.markdown("""
         color: #FFFFFF !important;
     }
 
-    /* Estilo de Pestañas Adaptables */
+    /* Pestañas Adaptables con Fondo #ACAEB0 */
     .stTabs [data-baseweb="tab-list"] {
         gap: 6px;
-        background-color: rgba(255, 255, 255, 0.5);
+        background-color: #7D8083;
         padding: 6px;
         border-radius: 10px;
         overflow-x: auto;
@@ -100,11 +101,11 @@ st.markdown("""
         border-radius: 8px;
         padding-left: 14px;
         padding-right: 14px;
-        background-color: #FFFFFF;
-        border: 2px solid #CBD5E1;
+        background-color: #ACAEB0;
+        border: 1px solid #6B6E71;
         font-weight: 700;
         font-size: 0.95rem;
-        color: #1E293B !important;
+        color: #0F172A !important;
         white-space: nowrap;
     }
     .stTabs [aria-selected="true"] {
@@ -113,10 +114,10 @@ st.markdown("""
         color: #FFFFFF !important;
     }
 
-    /* Sidebar con fondo claro estructurado */
+    /* Sidebar con fondo gris en tono armonioso */
     section[data-testid="stSidebar"] {
-        background-color: #F1F5F9;
-        border-right: 2px solid #CBD5E1;
+        background-color: #ACAEB0;
+        border-right: 2px solid #7D8083;
     }
     
     label {
@@ -124,16 +125,24 @@ st.markdown("""
         font-weight: 700 !important;
     }
 
-    /* Tarjeta contenedora para formularios */
+    /* Tarjetas contenedoras para formularios con fondo #ACAEB0 */
     div[data-testid="stColumn"] {
-        background-color: #FFFFFF;
-        padding: 16px;
+        background-color: #ACAEB0;
+        padding: 18px;
         border-radius: 12px;
+        border: 1px solid #7D8083;
         box-shadow: 0 4px 10px rgba(0,0,0,0.15);
         margin-bottom: 12px;
     }
 
-    /* Ajustes específicos para pantallas de Teléfonos (Mobile) */
+    /* Entradas de texto y selects adaptados */
+    .stTextArea textarea, .stSelectbox div[data-baseweb="select"] {
+        background-color: #F8FAFC !important;
+        color: #0F172A !important;
+        border-radius: 8px;
+    }
+
+    /* Ajustes específicos para móviles */
     @media (max-width: 768px) {
         .sub-title {
             font-size: 0.95rem !important;
@@ -179,7 +188,7 @@ with st.sidebar:
     )
     
     st.markdown("---")
-    st.caption("AnotIA v3.4 • Diseño Responsive")
+    st.caption("AnotIA v3.5 • Estilo Gris Armonizado")
 
 # Obtener la API Key exclusivamente de los Secrets del Servidor
 api_key_input = st.secrets.get("GEMINI_API_KEY", "")
@@ -208,7 +217,7 @@ with tab_graficos:
     st.write("Visualización del marco conceptual y flujo metodológico aplicado por AnotIA para el análisis de convivencia y RICE.")
     
     if os.path.exists(IMAGE_GRAFICOS):
-        # Despliegue centrado y en tamaño moderado (no gigante)
+        # Despliegue centrado y en tamaño moderado
         col_img1, col_img2, col_img3 = st.columns([1, 2, 1])
         with col_img2:
             st.image(IMAGE_GRAFICOS, use_container_width=True, caption="Esquema y Referencia Visual del Sistema AnotIA")
@@ -308,7 +317,7 @@ with tab_generador:
                              * **Protocolo Sugerido:** [Pasos resumidos del procedimiento]
 
                         2. SEGUNDA PARTE (OPCIONES PARA LIBRO DE CLASES):
-                           - Presenta 2 opciones de redacción listas para copiar y pagar en el Libro de Clases:
+                           - Presenta 2 opciones de redacción listas para copiar y pegar en el Libro de Clases:
                              * **Opción A (Breve / Directa):** Ideal para libro de clases físico (espacio reducido) o plataformas con límite estricto de caracteres.
                              * **Opción B (Formativa / Descriptiva):** Ideal para libro de clases digital o registros que requieran mayor detalle y contexto formativo.
                            - Ambas opciones deben ser constructivas, neutras y fundamentadas pedagógicamente.
