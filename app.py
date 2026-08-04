@@ -27,14 +27,14 @@ IMAGE_LOGO = "Logo anotIA.png"
 IMAGE_GRAFICOS = "grafico.png"
 
 # =========================================================
-# ESTILOS CSS TEMA CLARO: "EDUCATIVO & DINÁMICO" (#F8FAFC)
+# ESTILOS CSS TEMA CLARO: "EDUCATIVO & DINÁMICO" (ALTO CONTRASTE)
 # =========================================================
 st.markdown("""
 <style>
     /* 1. Fondo general de la App (#F8FAFC) */
     .stApp {
         background-color: #F8FAFC;
-        color: #1E293B;
+        color: #0F172A;
     }
 
     /* 2. Títulos y Encabezados */
@@ -61,7 +61,7 @@ st.markdown("""
     /* 4. Insignia / Badge Superior */
     .badge-tag {
         background-color: #4F46E5;
-        color: #FFFFFF;
+        color: #FFFFFF !important;
         padding: 6px 14px;
         border-radius: 20px;
         font-size: 0.85rem;
@@ -81,7 +81,7 @@ st.markdown("""
         margin-bottom: 16px;
     }
 
-    /* 6. Sidebar en Azul Slate Oscuro (#0F172A) */
+    /* 6. Sidebar en Azul Slate Oscuro (#0F172A) con textos legibles */
     section[data-testid="stSidebar"] {
         background-color: #0F172A;
         border-right: 1px solid #1E293B;
@@ -89,10 +89,13 @@ st.markdown("""
     section[data-testid="stSidebar"] h1, 
     section[data-testid="stSidebar"] h2, 
     section[data-testid="stSidebar"] h3, 
-    section[data-testid="stSidebar"] h4,
+    section[data-testid="stSidebar"] h4, 
+    section[data-testid="stSidebar"] h5, 
+    section[data-testid="stSidebar"] h6,
     section[data-testid="stSidebar"] label,
-    section[data-testid="stSidebar"] .stCaption {
-        color: #F8FAFC !important;
+    section[data-testid="stSidebar"] p,
+    section[data-testid="stSidebar"] span {
+        color: #F1F5F9 !important;
     }
 
     /* Tarjeta informativa dentro del Sidebar */
@@ -101,22 +104,29 @@ st.markdown("""
         border-radius: 10px;
         padding: 14px;
         border-left: 4px solid #4F46E5;
-        color: #334155;
+        color: #1E293B !important;
         font-size: 0.9rem;
         line-height: 1.4;
         box-shadow: 0 2px 6px rgba(0,0,0,0.1);
         margin-bottom: 15px;
     }
-
-    /* 7. Zona de Carga PDF (Drag & Drop) */
-    .stFileUploader section {
-        background-color: #1E293B !important;
-        border: 2px dashed #475569 !important;
-        border-radius: 10px !important;
-        padding: 10px !important;
+    .sidebar-info-box strong {
+        color: #0F172A !important;
     }
-    .stFileUploader section div, .stFileUploader section span {
-        color: #CBD5E1 !important;
+
+    /* 7. Zona de Carga PDF (RICE) - Alto Contraste */
+    .stFileUploader section {
+        background-color: #F1F5F9 !important;
+        border: 2px dashed #6366F1 !important;
+        border-radius: 10px !important;
+        padding: 12px !important;
+    }
+    .stFileUploader section div, 
+    .stFileUploader section span, 
+    .stFileUploader section small,
+    .stFileUploader section p {
+        color: #0F172A !important;
+        font-weight: 600 !important;
     }
 
     /* 8. Pestañas de navegación superiores (Tabs) */
@@ -135,7 +145,7 @@ st.markdown("""
         border: none;
         font-weight: 700;
         font-size: 0.95rem;
-        color: #64748B !important;
+        color: #475569 !important;
         white-space: nowrap;
     }
     .stTabs [aria-selected="true"] {
@@ -162,9 +172,9 @@ st.markdown("""
         color: #FFFFFF !important;
     }
 
-    /* 10. Entradas de texto y selects */
+    /* 10. Entradas de texto, selects y descripciones */
     .stTextArea textarea, .stSelectbox div[data-baseweb="select"] {
-        background-color: #F8FAFC !important;
+        background-color: #FFFFFF !important;
         color: #0F172A !important;
         border-radius: 8px !important;
         border: 1px solid #CBD5E1 !important;
@@ -227,7 +237,7 @@ with st.sidebar:
     )
     
     st.markdown("---")
-    st.caption("AnotIA v4.0 • Tema Claro Educativo")
+    st.caption("AnotIA v4.1 • Alto Contraste y Legibilidad")
 
 # Obtener la API Key exclusivamente de los Secrets del Servidor
 api_key_input = st.secrets.get("GEMINI_API_KEY", "")
