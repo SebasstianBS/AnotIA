@@ -27,17 +27,17 @@ IMAGE_LOGO = "Logo anotIA.png"
 IMAGE_GRAFICOS = "grafico.png"
 
 # =========================================================
-# ESTILOS CSS CON ALTO CONTRASTE Y LEGIBILIDAD EXCELENTE
+# ESTILOS CSS CON FONDO #939699 Y TARJETAS EN ALTO CONTRASTE
 # =========================================================
 st.markdown("""
 <style>
-    /* Fondo general claro */
+    /* Fondo general #939699 */
     .stApp {
-        background-color: #FFFFFF;
+        background-color: #939699;
         color: #0F172A;
     }
     
-    /* Encabezados y títulos principales */
+    /* Encabezados y títulos principales en blanco o azul oscuro según contenedor */
     h1, h2, h3, h4, h5, h6 {
         color: #0F172A !important;
         font-weight: 800 !important;
@@ -45,11 +45,15 @@ st.markdown("""
     
     /* Subtítulo de bienvenida */
     .sub-title {
-        color: #334155 !important;
+        color: #1E293B !important;
         font-size: 1.25rem !important;
-        font-weight: 600 !important;
+        font-weight: 700 !important;
         margin-top: 0.25rem;
         margin-bottom: 1.5rem;
+        background-color: rgba(255, 255, 255, 0.85);
+        padding: 8px 16px;
+        border-radius: 8px;
+        display: inline-block;
     }
 
     /* Etiqueta / Insignia superior */
@@ -74,25 +78,28 @@ st.markdown("""
         border-radius: 10px !important;
         padding: 0.75rem 1.5rem !important;
         border: none !important;
-        box-shadow: 0 4px 6px -1px rgba(5, 150, 105, 0.4) !important;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25) !important;
         transition: all 0.2s ease-in-out !important;
     }
     .stButton>button:hover {
         background-color: #047857 !important;
-        box-shadow: 0 6px 12px -2px rgba(4, 120, 87, 0.5) !important;
+        box-shadow: 0 6px 14px rgba(0, 0, 0, 0.35) !important;
         color: #FFFFFF !important;
     }
 
-    /* Estilo de Pestañas con Texto Oscuro Claramente Visible */
+    /* Estilo de Pestañas con Fondo Blanco en Alto Contraste */
     .stTabs [data-baseweb="tab-list"] {
         gap: 8px;
+        background-color: rgba(255, 255, 255, 0.4);
+        padding: 6px;
+        border-radius: 10px;
     }
     .stTabs [data-baseweb="tab"] {
         height: 48px;
         border-radius: 8px;
         padding-left: 20px;
         padding-right: 20px;
-        background-color: #F1F5F9;
+        background-color: #FFFFFF;
         border: 2px solid #CBD5E1;
         font-weight: 700;
         color: #1E293B !important;
@@ -103,16 +110,24 @@ st.markdown("""
         color: #FFFFFF !important;
     }
 
-    /* Sidebar con fondo suave e imágenes/textos legibles */
+    /* Sidebar con fondo claro estructurado */
     section[data-testid="stSidebar"] {
-        background-color: #F8FAFC;
-        border-right: 2px solid #E2E8F0;
+        background-color: #F1F5F9;
+        border-right: 2px solid #CBD5E1;
     }
     
     /* Contenedores de opciones y entradas */
     label {
         color: #0F172A !important;
         font-weight: 700 !important;
+    }
+
+    /* Tarjeta contenedora para formularios */
+    div[data-testid="stColumn"] {
+        background-color: #FFFFFF;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
     }
 </style>
 """, unsafe_allow_html=True)
@@ -145,7 +160,7 @@ with st.sidebar:
     )
     
     st.markdown("---")
-    st.caption("AnotIA v3.1 • Alto Contraste Visual")
+    st.caption("AnotIA v3.3 • Fondo #939699")
 
 # Obtener la API Key exclusivamente de los Secrets del Servidor
 api_key_input = st.secrets.get("GEMINI_API_KEY", "")
