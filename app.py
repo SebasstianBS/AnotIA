@@ -27,25 +27,28 @@ IMAGE_LOGO = "Logo anotIA.png"
 IMAGE_GRAFICOS = "grafico.png"
 
 # =========================================================
-# ESTILOS CSS TEMA CLARO: "EDUCATIVO & DINÁMICO" (ALTO CONTRASTE)
+# ESTILOS CSS CON TEXTO NEGRO EN EL FONDO PRINCIPAL
 # =========================================================
 st.markdown("""
 <style>
-    /* 1. Fondo general de la App (#F8FAFC) */
-    .stApp {
-        background-color: #F8FAFC;
-        color: #0F172A;
+    /* 1. Fondo general (#F8FAFC) y Texto Negro (#000000) */
+    .stApp, .stApp p, .stApp span, .stApp div, .stApp li {
+        color: #000000 !important; 
     }
 
-    /* 2. Títulos y Encabezados */
+    .stApp {
+        background-color: #F8FAFC;
+    }
+
+    /* 2. Títulos y Encabezados en Negro */
     h1, h2, h3, h4, h5, h6 {
-        color: #0F172A !important;
+        color: #000000 !important;
         font-weight: 800 !important;
     }
 
-    /* 3. Subtítulo Banner superior (Tarjeta limpia blanca) */
+    /* 3. Subtítulo Banner superior */
     .sub-title {
-        color: #1E293B !important;
+        color: #000000 !important;
         font-size: 1.15rem !important;
         font-weight: 600 !important;
         margin-top: 0.25rem;
@@ -54,7 +57,7 @@ st.markdown("""
         padding: 10px 20px;
         border-radius: 10px;
         display: inline-block;
-        border: 1px solid #E2E8F0;
+        border: 1px solid #CBD5E1;
         box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
 
@@ -71,17 +74,17 @@ st.markdown("""
         margin-bottom: 12px;
     }
 
-    /* 5. Tarjetas contenedoras de columnas (#FFFFFF con sombra suave) */
+    /* 5. Tarjetas contenedoras (#FFFFFF con sombra suave) */
     div[data-testid="stColumn"] {
         background-color: #FFFFFF;
         padding: 22px;
         border-radius: 14px;
-        border: 1px solid #E2E8F0;
+        border: 1px solid #CBD5E1;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
         margin-bottom: 16px;
     }
 
-    /* 6. Sidebar en Azul Slate Oscuro (#0F172A) con textos legibles */
+    /* 6. Sidebar en Azul Slate Oscuro (#0F172A) con letras blancas */
     section[data-testid="stSidebar"] {
         background-color: #0F172A;
         border-right: 1px solid #1E293B;
@@ -95,7 +98,7 @@ st.markdown("""
     section[data-testid="stSidebar"] label,
     section[data-testid="stSidebar"] p,
     section[data-testid="stSidebar"] span {
-        color: #F1F5F9 !important;
+        color: #FFFFFF !important;
     }
 
     /* Tarjeta informativa dentro del Sidebar */
@@ -104,17 +107,14 @@ st.markdown("""
         border-radius: 10px;
         padding: 14px;
         border-left: 4px solid #4F46E5;
-        color: #1E293B !important;
-        font-size: 0.9rem;
-        line-height: 1.4;
         box-shadow: 0 2px 6px rgba(0,0,0,0.1);
         margin-bottom: 15px;
     }
-    .sidebar-info-box strong {
-        color: #0F172A !important;
+    .sidebar-info-box p, .sidebar-info-box strong {
+        color: #000000 !important;
     }
 
-    /* 7. Zona de Carga PDF (RICE) - Alto Contraste */
+    /* 7. Zona de Carga PDF (RICE) */
     .stFileUploader section {
         background-color: #F1F5F9 !important;
         border: 2px dashed #6366F1 !important;
@@ -125,16 +125,16 @@ st.markdown("""
     .stFileUploader section span, 
     .stFileUploader section small,
     .stFileUploader section p {
-        color: #0F172A !important;
+        color: #000000 !important;
         font-weight: 600 !important;
     }
 
-    /* 8. Pestañas de navegación superiores (Tabs) */
+    /* 8. Pestañas de navegación (Tabs) */
     .stTabs [data-baseweb="tab-list"] {
         gap: 8px;
         background-color: transparent;
         padding: 4px;
-        border-bottom: 2px solid #E2E8F0;
+        border-bottom: 2px solid #CBD5E1;
     }
     .stTabs [data-baseweb="tab"] {
         height: 44px;
@@ -154,7 +154,7 @@ st.markdown("""
         color: #4F46E5 !important;
     }
 
-    /* 9. Botón Principal de Acción (Índigo / Púrpura Vivo #4F46E5) */
+    /* 9. Botón Principal (Letra Blanca) */
     .stButton>button {
         background-color: #4F46E5 !important;
         color: #FFFFFF !important;
@@ -172,10 +172,10 @@ st.markdown("""
         color: #FFFFFF !important;
     }
 
-    /* 10. Entradas de texto, selects y descripciones */
+    /* 10. Entradas de texto y selects en negro */
     .stTextArea textarea, .stSelectbox div[data-baseweb="select"] {
         background-color: #FFFFFF !important;
-        color: #0F172A !important;
+        color: #000000 !important;
         border-radius: 8px !important;
         border: 1px solid #CBD5E1 !important;
     }
@@ -184,11 +184,11 @@ st.markdown("""
         box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.15) !important;
     }
     label {
-        color: #0F172A !important;
+        color: #000000 !important;
         font-weight: 700 !important;
     }
 
-    /* 11. Ajustes para Teléfonos Móviles (Responsive) */
+    /* 11. Ajustes Responsivos para Móviles */
     @media (max-width: 768px) {
         .sub-title {
             font-size: 0.95rem !important;
@@ -213,8 +213,8 @@ with st.sidebar:
     
     st.markdown("""
     <div class="sidebar-info-box">
-        <strong>AnotIA</strong> optimiza el trabajo administrativo docente convirtiendo notas rápidas 
-        en redacciones formales, pedagógicas y alineadas al <strong>Reglamento Interno (RICE)</strong> de tu colegio.
+        <p><strong>AnotIA</strong> optimiza el trabajo administrativo docente convirtiendo notas rápidas 
+        en redacciones formales, pedagógicas y alineadas al <strong>Reglamento Interno (RICE)</strong> de tu colegio.</p>
     </div>
     """, unsafe_allow_html=True)
     
@@ -237,7 +237,7 @@ with st.sidebar:
     )
     
     st.markdown("---")
-    st.caption("AnotIA v4.1 • Alto Contraste y Legibilidad")
+    st.caption("AnotIA v4.2 • Texto Negro de Alto Contraste")
 
 # Obtener la API Key exclusivamente de los Secrets del Servidor
 api_key_input = st.secrets.get("GEMINI_API_KEY", "")
@@ -266,7 +266,6 @@ with tab_graficos:
     st.write("Visualización del marco conceptual y flujo metodológico aplicado por AnotIA para el análisis de convivencia y RICE.")
     
     if os.path.exists(IMAGE_GRAFICOS):
-        # Despliegue centrado y en tamaño moderado para buena visualización móvil
         col_img1, col_img2, col_img3 = st.columns([1, 2, 1])
         with col_img2:
             st.image(IMAGE_GRAFICOS, use_container_width=True, caption="Esquema y Referencia Visual del Sistema AnotIA")
