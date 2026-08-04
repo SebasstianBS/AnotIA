@@ -279,7 +279,7 @@ with st.sidebar:
     )
     
     st.markdown("---")
-    st.caption("AnotIA v5.0 •")
+    st.caption("AnotIA v5.1 •")
 
 # Obtener la API Key exclusivamente de los Secrets del Servidor
 api_key_input = st.secrets.get("GEMINI_API_KEY", "")
@@ -296,16 +296,30 @@ else:
 
 st.markdown('<p class="sub-title"><i>Menos escritura. Más tiempo para enseñar.</i></p>', unsafe_allow_html=True)
 
-# Pestañas Principales (Tabs)
-tab_generador, tab_graficos, tab_historial, tab_favoritos = st.tabs([
-    "📝 Generador", 
+# Pestañas Principales (Los Gráficos van primero)
+tab_graficos, tab_generador, tab_historial, tab_favoritos = st.tabs([
     "📊 Estadísticas y Modelo", 
+    "📝 Generador", 
     "📜 Historial", 
     "⭐ Favoritos"
 ])
 
 # ----------------------------------------------------
-# PESTAÑA 1: GENERADOR PRINCIPAL
+# PESTAÑA 1: FOTO DE GRÁFICOS / MODELO PEDAGÓGICO
+# ----------------------------------------------------
+with tab_graficos:
+    st.subheader("📈 Esquema Pedagógico y Gráficos de Referencia")
+    st.write("Visualización del marco conceptual y flujo metodológico aplicado por AnotIA para el análisis de convivencia y RICE.")
+    
+    if os.path.exists(IMAGE_GRAFICOS):
+        col_img1, col_img2, col_img3 = st.columns([1, 2, 1])
+        with col_img2:
+            st.image(IMAGE_GRAFICOS, use_container_width=True, caption="Esquema y Referencia Visual del Sistema AnotIA")
+    else:
+        st.warning(f"⚠️ Guarda la imagen de tus gráficos como `{IMAGE_GRAFICOS}` en GitHub para visualizarla aquí.")
+
+# ----------------------------------------------------
+# PESTAÑA 2: GENERADOR PRINCIPAL
 # ----------------------------------------------------
 with tab_generador:
     col1, col2 = st.columns([1, 1], gap="large")
@@ -458,20 +472,6 @@ with tab_generador:
 
         else:
             st.info("👈 Selecciona el tipo de registro, ingresa los detalles y presiona el botón para generar.")
-
-# ----------------------------------------------------
-# PESTAÑA 2: FOTO DE GRÁFICOS / MODELO PEDAGÓGICO
-# ----------------------------------------------------
-with tab_graficos:
-    st.subheader("📈 Esquema Pedagógico y Gráficos de Referencia")
-    st.write("Visualización del marco conceptual y flujo metodológico aplicado por AnotIA para el análisis de convivencia y RICE.")
-    
-    if os.path.exists(IMAGE_GRAFICOS):
-        col_img1, col_img2, col_img3 = st.columns([1, 2, 1])
-        with col_img2:
-            st.image(IMAGE_GRAFICOS, use_container_width=True, caption="Esquema y Referencia Visual del Sistema AnotIA")
-    else:
-        st.warning(f"⚠️ Guarda la imagen de tus gráficos como `{IMAGE_GRAFICOS}` en GitHub para visualizarla aquí.")
 
 # ----------------------------------------------------
 # PESTAÑA 3: HISTORIAL RECIENTE
