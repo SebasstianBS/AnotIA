@@ -50,14 +50,14 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Sidebar - Opciones del profesor
+# Sidebar - Descripción de la herramienta y ajustes
 with st.sidebar:
-    if os.path.exists(IMAGE_FILENAME):
-        st.image(IMAGE_FILENAME, width=160)
-    else:
-        st.image("https://img.icons8.com/illustrations/100/teacher.png", width=80)
-        
-    st.caption("Menos tiempo redactando, más tiempo enseñando.")
+    st.subheader("💡 ¿Qué es AnotIA?")
+    st.info(
+        "AnotIA es un asistente inteligente diseñado para optimizar el trabajo administrativo docente. "
+        "Transforma observaciones y notas rápidas de aula en redacciones formales, pedagógicas e institucionales, "
+        "alineadas al Reglamento Interno de Convivencia Escolar (RICE) de tu establecimiento."
+    )
     
     st.markdown("---")
     st.subheader("📄 Reglamento Interno (RICE)")
@@ -78,7 +78,7 @@ with st.sidebar:
     )
     
     st.markdown("---")
-    st.caption("AnotIA v2.6 • Con Historial Local")
+    st.caption("AnotIA v2.7 • Tono Pedagógico Permanente")
 
 # Obtener la API Key exclusivamente de los Secrets del Servidor
 api_key_input = st.secrets.get("GEMINI_API_KEY", "")
