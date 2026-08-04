@@ -43,7 +43,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Sidebar - Configuración, API Key y Carga de RICE
+# Sidebar - Solo opciones pedagógicas para el profesor
 with st.sidebar:
     if os.path.exists(IMAGE_FILENAME):
         st.image(IMAGE_FILENAME, width=160)
@@ -52,31 +52,6 @@ with st.sidebar:
         
     st.caption("Menos tiempo redactando, más tiempo enseñando.")
     
-    st.markdown("---")
-    st.subheader("⚙️ Configuración")
-    
-    # Obtiene la API Key desde los Secrets de Streamlit (Servidor)
-    server_api_key = st.secrets.get("GEMINI_API_KEY", "")
-    
-    # Campo opcional para clave personal
-    user_api_key = st.text_input(
-        "Clave API personalizada (Opcional)",
-        type="password",
-        help="Si prefieres usar tu propia clave de Google Gemini, puedes ingresarla aquí."
-    )
-    
-    # Determinación final de la clave API
-    if user_api_key.strip():
-        api_key_input = user_api_key
-    else:
-        api_key_input = server_api_key
-
-    # Indicador de estado de la API Key
-    if api_key_input:
-        st.success("🟢 Sistema listo para usar")
-    else:
-        st.warning("⚠️ Sin Clave API configurada.")
-
     st.markdown("---")
     st.subheader("📄 Reglamento Interno (RICE)")
     uploaded_rice = st.file_uploader(
@@ -98,9 +73,11 @@ with st.sidebar:
     st.markdown("---")
     st.caption("AnotIA v2.5 • Tono Pedagógico Permanente")
 
+# Obtener la API Key exclusivamente de los Secrets del Servidor
+api_key_input = st.secrets.get("GEMINI_API_KEY", "")
+
 # Encabezado Principal: Solo Logo Agrandado y Eslogan
 if os.path.exists(IMAGE_FILENAME):
-    # Se ajusta width=320 para un logo visible y destacado. Puedes cambiarlo si lo deseas más grande/pequeño.
     st.image(IMAGE_FILENAME, width=320)
 else:
     st.markdown("## ✏️ **AnotIA**")
@@ -134,22 +111,8 @@ with col1:
     
     detalles = st.text_area(
         "Hechos u observaciones clave (palabras clave o borrador rápido)",
-        height=130,
+        height=160,
         placeholder="Ej: Durante la actividad de lenguaje, el alumno interrumpe constantemente a sus compañeros, se niega a realizar la guía y responde de forma desafiante al solicitárselo."
-    )
-    
-    # Opciones dinámicas según el tipo de registro
-    if "Negativa" in tipo_anotacion:
-        default_opciones = ["Tipificación de la Falta (RICE)", "Citar punto/artículo del RICE", "Protocolo de Acción"]
-    elif "Observación" in tipo_anotacion:
-        default_opciones = ["Estrategia Pedagógica Sugerida", "Seguimiento en Aula"]
-    else:
-        default_opciones = ["Felicitación / Reconocimiento"]
-
-    opciones_extra = st.multiselect(
-        "Elementos clave a incluir:",
-        ["Tipificación de la Falta (RICE)", "Citar punto/artículo del RICE", "Protocolo de Acción", "Compromiso de mejora", "Estrategia Pedagógica Sugerida", "Citación a Apoderado", "Felicitación / Reconocimiento"],
-        default=default_opciones
     )
 
     generar_btn = st.button("✨ Generar Redacción Profesional", use_container_width=True)
@@ -160,7 +123,7 @@ with col2:
     
     if generar_btn:
         if not api_key_input:
-            st.error("⚠️ El sistema no cuenta con una API Key configurada. Por favor, ingresa una clave válida en la barra lateral.")
+            st.error("⚠️ Error del servidor: No se ha configurado la clave GEMINI_API_KEY en los Secrets de la aplicación.")
         elif not detalles.strip():
             st.warning("⚠️ Ingresa al menos unas cuantas palabras clave sobre el hecho observado.")
         else:
@@ -241,7 +204,6 @@ with col2:
                     - Tipo de Registro: {tipo_anotacion}
                     - Categoría: {asunto_categoria}
                     - Hechos descritos: {detalles}
-                    - Elementos adicionales: {', '.join(opciones_extra) if opciones_extra else 'Ninguno'}
                     """
 
                     contents_payload.append(prompt)
