@@ -6,6 +6,7 @@ Prototipo MVP construido con Streamlit y la API de Google Gemini (google-genai).
 import streamlit as st
 import google.genai as genai
 from google.genai import types
+import os
 
 # Configuración de la página
 st.set_page_config(
@@ -14,6 +15,9 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
+
+# Nombre de la imagen subida a GitHub (Asegúrate de que coincida con el nombre exacto de tu archivo en el repositorio)
+IMAGE_FILENAME = "Logo anotIA.png"
 
 # Estilos CSS personalizados
 st.markdown("""
@@ -46,34 +50,39 @@ st.markdown("""
 
 # Sidebar - Configuración, API Key y Carga de RICE
 with st.sidebar:
-    st.image("https://img.icons8.com/illustrations/100/teacher.png", width=80)
+    # Muestra el logo en la barra lateral si el archivo existe
+    if os.path.exists(IMAGE_FILENAME):
+        st.image(IMAGE_FILENAME, width=140)
+    else:
+        st.image("https://img.icons8.com/illustrations/100/teacher.png", width=80)
+        
     st.title("✏️ AnotIA")
     st.caption("Menos tiempo redactando, más tiempo enseñando.")
     
     st.markdown("---")
     st.subheader("⚙️ Configuración")
     
-    # Intenta obtener la API Key desde los Secrets de Streamlit (Servidor)
+    # Obtiene la API Key desde los Secrets de Streamlit (Servidor)
     server_api_key = st.secrets.get("GEMINI_API_KEY", "")
     
-    # Campo opcional por si alguien desea usar su propia Key
+    # Campo opcional para clave personal
     user_api_key = st.text_input(
         "Clave API personalizada (Opcional)",
         type="password",
         help="Si prefieres usar tu propia clave de Google Gemini, puedes ingresarla aquí."
     )
     
-    # Determinación final de la clave API a utilizar
+    # Determinación final de la clave API
     if user_api_key.strip():
         api_key_input = user_api_key
     else:
         api_key_input = server_api_key
 
-    # Indicador de estado de la clave API para la tranquilidad del docente
+    # Indicador de estado de la API Key
     if api_key_input:
         st.success("🟢 Sistema listo para usar")
     else:
-        st.warning("⚠️ Sin Clave API en servidor. Ingresa una en el campo superior.")
+        st.warning("⚠️ Sin Clave API configurada.")
 
     st.markdown("---")
     st.subheader("📄 Reglamento Interno (RICE)")
@@ -96,9 +105,16 @@ with st.sidebar:
     st.markdown("---")
     st.caption("AnotIA v2.5 • Tono Pedagógico Permanente")
 
-# Título Principal
-st.markdown('<h1 class="main-title">✏️ AnotIA</h1>', unsafe_allow_html=True)
-st.markdown('<p class="sub-title"><i>"Menos tiempo redactando, más tiempo enseñando."</i></p>', unsafe_allow_html=True)
+# Título e Imagen Principal
+col_logo, col_header = st.columns([1, 5])
+
+with col_logo:
+    if os.path.exists(IMAGE_FILENAME):
+        st.image(IMAGE_FILENAME, width=110)
+
+with col_header:
+    st.markdown('<h1 class="main-title">✏️ AnotIA</h1>', unsafe_allow_html=True)
+    st.markdown('<p class="sub-title"><i>"Menos tiempo redactando, más tiempo enseñando."</i></p>', unsafe_allow_html=True)
 
 # Formulario Principal
 col1, col2 = st.columns([1, 1], gap="large")
