@@ -25,27 +25,68 @@ if "favoritos" not in st.session_state:
 # Nombre del archivo de imagen en el repositorio
 IMAGE_FILENAME = "Logo anotIA.png"
 
-# Estilos CSS personalizados
+# =========================================================
+# ESTILOS CSS PERSONALIZADOS (DISEÑO Y COLORES)
+# =========================================================
 st.markdown("""
 <style>
-    .sub-title {
-        color: #4B5563;
-        font-size: 1.25rem;
-        font-weight: 500;
-        margin-top: 0.5rem;
-        margin-bottom: 2rem;
+    /* Fondo general suave */
+    .stApp {
+        background-color: #F8FAFC;
     }
+    
+    /* Subtítulo principal */
+    .sub-title {
+        color: #475569;
+        font-size: 1.2rem;
+        font-weight: 500;
+        margin-top: 0.25rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    /* Estilo del botón principal */
     .stButton>button {
-        background-color: #2563EB;
-        color: white;
-        font-weight: 600;
-        border-radius: 8px;
-        padding: 0.5rem 1rem;
+        background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
+        color: #FFFFFF;
+        font-weight: 700;
+        font-size: 1.05rem;
+        border-radius: 10px;
+        padding: 0.65rem 1.25rem;
         border: none;
+        box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.25);
+        transition: all 0.2s ease-in-out;
     }
     .stButton>button:hover {
-        background-color: #1D4ED8;
-        color: white;
+        background: linear-gradient(135deg, #1D4ED8 0%, #1E40AF 100%);
+        box-shadow: 0 6px 12px -2px rgba(37, 99, 235, 0.35);
+        transform: translateY(-1px);
+        color: #FFFFFF;
+    }
+    
+    /* Pestañas personalizadas */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 8px;
+    }
+    .stTabs [data-baseweb="tab"] {
+        height: 48px;
+        border-radius: 8px;
+        padding-left: 16px;
+        padding-right: 16px;
+        background-color: #FFFFFF;
+        border: 1px solid #E2E8F0;
+        font-weight: 600;
+        color: #64748B;
+    }
+    .stTabs [aria-selected="true"] {
+        background-color: #EFF6FF !important;
+        border-color: #2563EB !important;
+        color: #1D4ED8 !important;
+    }
+
+    /* Personalización del Sidebar */
+    section[data-testid="stSidebar"] {
+        background-color: #FFFFFF;
+        border-right: 1px solid #E2E8F0;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -78,7 +119,7 @@ with st.sidebar:
     )
     
     st.markdown("---")
-    st.caption("AnotIA Beta 0.1 • Tono Pedagógico Permanente")
+    st.caption("AnotIA Beta v0.2 • Tono Pedagógico Permanente")
 
 # Obtener la API Key exclusivamente de los Secrets del Servidor
 api_key_input = st.secrets.get("GEMINI_API_KEY", "")
