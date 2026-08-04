@@ -78,7 +78,7 @@ with st.sidebar:
     )
     
     st.markdown("---")
-    st.caption("AnotIA v2.7 • Tono Pedagógico Permanente")
+    st.caption("AnotIA Beta 0.1 • Tono Pedagógico Permanente")
 
 # Obtener la API Key exclusivamente de los Secrets del Servidor
 api_key_input = st.secrets.get("GEMINI_API_KEY", "")
