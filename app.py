@@ -10,27 +10,23 @@ import os
 
 # Configuración de la página
 st.set_page_config(
-    page_title="Menos tiempo redactando, más tiempo enseñando",
+    page_title="AnotIA - Menos tiempo redactando, más tiempo enseñando",
     page_icon="✏️",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Nombre de la imagen subida a GitHub (Asegúrate de que coincida con el nombre exacto de tu archivo en el repositorio)
-IMAGE_FILENAME = "Logo anotIA.png"
+# Nombre del archivo de imagen en tu repositorio
+IMAGE_FILENAME = "logo.png"
 
 # Estilos CSS personalizados
 st.markdown("""
 <style>
-    .main-title {
-        color: #1E3A8A;
-        font-weight: 800;
-        margin-bottom: 0px;
-    }
     .sub-title {
         color: #4B5563;
-        font-size: 1.15rem;
+        font-size: 1.25rem;
         font-weight: 500;
+        margin-top: 0.5rem;
         margin-bottom: 2rem;
     }
     .stButton>button {
@@ -50,13 +46,11 @@ st.markdown("""
 
 # Sidebar - Configuración, API Key y Carga de RICE
 with st.sidebar:
-    # Muestra el logo en la barra lateral si el archivo existe
     if os.path.exists(IMAGE_FILENAME):
-        st.image(IMAGE_FILENAME, width=140)
+        st.image(IMAGE_FILENAME, width=160)
     else:
         st.image("https://img.icons8.com/illustrations/100/teacher.png", width=80)
         
-    st.title("✏️ AnotIA")
     st.caption("Menos tiempo redactando, más tiempo enseñando.")
     
     st.markdown("---")
@@ -105,16 +99,14 @@ with st.sidebar:
     st.markdown("---")
     st.caption("AnotIA v2.5 • Tono Pedagógico Permanente")
 
-# Título e Imagen Principal
-col_logo, col_header = st.columns([1, 5])
+# Encabezado Principal: Solo Logo Agrandado y Eslogan
+if os.path.exists(IMAGE_FILENAME):
+    # Se ajusta width=320 para un logo visible y destacado. Puedes cambiarlo si lo deseas más grande/pequeño.
+    st.image(IMAGE_FILENAME, width=320)
+else:
+    st.markdown("## ✏️ **AnotIA**")
 
-with col_logo:
-    if os.path.exists(IMAGE_FILENAME):
-        st.image(IMAGE_FILENAME, width=110)
-
-with col_header:
-    st.markdown('<h1 class="main-title">✏️ AnotIA</h1>', unsafe_allow_html=True)
-    st.markdown('<p class="sub-title"><i>"Menos tiempo redactando, más tiempo enseñando."</i></p>', unsafe_allow_html=True)
+st.markdown('<p class="sub-title"><i>"Menos tiempo redactando, más tiempo enseñando."</i></p>', unsafe_allow_html=True)
 
 # Formulario Principal
 col1, col2 = st.columns([1, 1], gap="large")
