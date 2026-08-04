@@ -22,28 +22,28 @@ if "historial" not in st.session_state:
 if "favoritos" not in st.session_state:
     st.session_state.favoritos = []
 
-# Nombres de archivos de imágenes en tu repositorio
+# Nombres de archivos de imágenes en el repositorio
 IMAGE_LOGO = "Logo anotIA.png"
 IMAGE_GRAFICOS = "grafico.png"
 
 # =========================================================
-# ESTILOS CSS CON FONDO #939699 Y TARJETAS #ACAEB0 (RESPONSIVE)
+# ESTILOS CSS CON SINTONÍA ARMÓNICA Y ALTO CONTRASTE
 # =========================================================
 st.markdown("""
 <style>
-    /* Fondo general #939699 */
+    /* 1. Fondo general de la App (#939699) */
     .stApp {
         background-color: #939699;
         color: #0F172A;
     }
-    
-    /* Encabezados y títulos principales */
+
+    /* 2. Títulos y Encabezados */
     h1, h2, h3, h4, h5, h6 {
         color: #0F172A !important;
         font-weight: 800 !important;
     }
-    
-    /* Subtítulo de bienvenida */
+
+    /* 3. Subtítulo Banner superior */
     .sub-title {
         color: #0F172A !important;
         font-size: 1.15rem !important;
@@ -54,12 +54,13 @@ st.markdown("""
         padding: 8px 16px;
         border-radius: 8px;
         display: inline-block;
-        border: 1px solid #7D8083;
+        border: 1px solid #737679;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
 
-    /* Etiqueta / Insignia superior */
+    /* 4. Insignia superior */
     .badge-tag {
-        background-color: #1E40AF;
+        background-color: #1E3A8A;
         color: #FFFFFF;
         padding: 6px 14px;
         border-radius: 20px;
@@ -70,28 +71,29 @@ st.markdown("""
         margin-bottom: 10px;
     }
 
-    /* Botón Principal de Alto Contraste */
-    .stButton>button {
-        background-color: #059669 !important;
-        color: #FFFFFF !important;
-        font-weight: 800 !important;
-        font-size: 1.05rem !important;
-        border-radius: 10px !important;
-        padding: 0.75rem 1.25rem !important;
-        border: none !important;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25) !important;
-        transition: all 0.2s ease-in-out !important;
-    }
-    .stButton>button:hover {
-        background-color: #047857 !important;
-        box-shadow: 0 6px 14px rgba(0, 0, 0, 0.35) !important;
-        color: #FFFFFF !important;
+    /* 5. Tarjetas contenedoras (#ACAEB0) */
+    div[data-testid="stColumn"] {
+        background-color: #ACAEB0;
+        padding: 18px;
+        border-radius: 12px;
+        border: 1px solid #737679;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        margin-bottom: 12px;
     }
 
-    /* Pestañas Adaptables con Fondo #ACAEB0 */
+    /* 6. Sidebar armónico (#85888B) */
+    section[data-testid="stSidebar"] {
+        background-color: #85888B;
+        border-right: 2px solid #6E7174;
+    }
+    section[data-testid="stSidebar"] label {
+        color: #0F172A !important;
+    }
+
+    /* 7. Pestañas de navegación superiores */
     .stTabs [data-baseweb="tab-list"] {
         gap: 6px;
-        background-color: #7D8083;
+        background-color: #737679;
         padding: 6px;
         border-radius: 10px;
         overflow-x: auto;
@@ -102,47 +104,52 @@ st.markdown("""
         padding-left: 14px;
         padding-right: 14px;
         background-color: #ACAEB0;
-        border: 1px solid #6B6E71;
+        border: 1px solid #636669;
         font-weight: 700;
         font-size: 0.95rem;
         color: #0F172A !important;
         white-space: nowrap;
     }
     .stTabs [aria-selected="true"] {
-        background-color: #1E40AF !important;
-        border-color: #1E40AF !important;
+        background-color: #1E3A8A !important;
+        border-color: #1E3A8A !important;
         color: #FFFFFF !important;
     }
 
-    /* Sidebar con fondo gris en tono armonioso */
-    section[data-testid="stSidebar"] {
-        background-color: #ACAEB0;
-        border-right: 2px solid #7D8083;
+    /* 8. Botón Principal de Acción (Verde Esmeralda Sobrio) */
+    .stButton>button {
+        background-color: #065F46 !important;
+        color: #FFFFFF !important;
+        font-weight: 800 !important;
+        font-size: 1.05rem !important;
+        border-radius: 10px !important;
+        padding: 0.75rem 1.25rem !important;
+        border: none !important;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
+        transition: all 0.2s ease-in-out !important;
     }
-    
+    .stButton>button:hover {
+        background-color: #044E38 !important;
+        box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3) !important;
+        color: #FFFFFF !important;
+    }
+
+    /* 9. Entradas de Texto, Selects y Desplegables en Alto Contraste */
+    .stTextArea textarea, .stSelectbox div[data-baseweb="select"], .stFileUploader section {
+        background-color: #F8FAFC !important;
+        color: #0F172A !important;
+        border-radius: 8px !important;
+        border: 1px solid #64748B !important;
+    }
+    .stTextArea textarea::placeholder {
+        color: #64748B !important;
+    }
     label {
         color: #0F172A !important;
         font-weight: 700 !important;
     }
 
-    /* Tarjetas contenedoras para formularios con fondo #ACAEB0 */
-    div[data-testid="stColumn"] {
-        background-color: #ACAEB0;
-        padding: 18px;
-        border-radius: 12px;
-        border: 1px solid #7D8083;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-        margin-bottom: 12px;
-    }
-
-    /* Entradas de texto y selects adaptados */
-    .stTextArea textarea, .stSelectbox div[data-baseweb="select"] {
-        background-color: #F8FAFC !important;
-        color: #0F172A !important;
-        border-radius: 8px;
-    }
-
-    /* Ajustes específicos para móviles */
+    /* 10. Ajustes para Teléfonos Móviles (Responsive) */
     @media (max-width: 768px) {
         .sub-title {
             font-size: 0.95rem !important;
@@ -188,7 +195,7 @@ with st.sidebar:
     )
     
     st.markdown("---")
-    st.caption("AnotIA v3.5 • Estilo Gris Armonizado")
+    st.caption("AnotIA v3.6 • Paleta Armónica")
 
 # Obtener la API Key exclusivamente de los Secrets del Servidor
 api_key_input = st.secrets.get("GEMINI_API_KEY", "")
@@ -201,7 +208,7 @@ else:
 
 st.markdown('<p class="sub-title"><i>"Menos tiempo redactando, más tiempo enseñando."</i></p>', unsafe_allow_html=True)
 
-# Pestañas Principales (GRÁFICOS PRIMERO)
+# Pestañas Principales (Gráficos Primero)
 tab_graficos, tab_generador, tab_historial, tab_favoritos = st.tabs([
     "📊 Gráficos y Modelo Pedagógico", 
     "📝 Generador", 
@@ -217,7 +224,7 @@ with tab_graficos:
     st.write("Visualización del marco conceptual y flujo metodológico aplicado por AnotIA para el análisis de convivencia y RICE.")
     
     if os.path.exists(IMAGE_GRAFICOS):
-        # Despliegue centrado y en tamaño moderado
+        # Despliegue centrado y en tamaño moderado para buena visualización móvil
         col_img1, col_img2, col_img3 = st.columns([1, 2, 1])
         with col_img2:
             st.image(IMAGE_GRAFICOS, use_container_width=True, caption="Esquema y Referencia Visual del Sistema AnotIA")
