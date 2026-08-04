@@ -27,14 +27,14 @@ IMAGE_LOGO = "Logo anotIA.png"
 IMAGE_GRAFICOS = "grafico.png"
 
 # =========================================================
-# ESTILOS CSS CON SINTONÍA ARMÓNICA Y ALTO CONTRASTE
+# ESTILOS CSS TEMA CLARO: "EDUCATIVO & DINÁMICO" (#F8FAFC)
 # =========================================================
 st.markdown("""
 <style>
-    /* 1. Fondo general de la App (#939699) */
+    /* 1. Fondo general de la App (#F8FAFC) */
     .stApp {
-        background-color: #939699;
-        color: #0F172A;
+        background-color: #F8FAFC;
+        color: #1E293B;
     }
 
     /* 2. Títulos y Encabezados */
@@ -43,24 +43,24 @@ st.markdown("""
         font-weight: 800 !important;
     }
 
-    /* 3. Subtítulo Banner superior */
+    /* 3. Subtítulo Banner superior (Tarjeta limpia blanca) */
     .sub-title {
-        color: #0F172A !important;
+        color: #1E293B !important;
         font-size: 1.15rem !important;
-        font-weight: 700 !important;
+        font-weight: 600 !important;
         margin-top: 0.25rem;
-        margin-bottom: 1.25rem;
-        background-color: #ACAEB0;
-        padding: 8px 16px;
-        border-radius: 8px;
+        margin-bottom: 1.5rem;
+        background-color: #FFFFFF;
+        padding: 10px 20px;
+        border-radius: 10px;
         display: inline-block;
-        border: 1px solid #737679;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        border: 1px solid #E2E8F0;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
 
-    /* 4. Insignia superior */
+    /* 4. Insignia / Badge Superior */
     .badge-tag {
-        background-color: #1E3A8A;
+        background-color: #4F46E5;
         color: #FFFFFF;
         padding: 6px 14px;
         border-radius: 20px;
@@ -68,95 +68,124 @@ st.markdown("""
         font-weight: 800;
         letter-spacing: 0.5px;
         display: inline-block;
-        margin-bottom: 10px;
-    }
-
-    /* 5. Tarjetas contenedoras (#ACAEB0) */
-    div[data-testid="stColumn"] {
-        background-color: #ACAEB0;
-        padding: 18px;
-        border-radius: 12px;
-        border: 1px solid #737679;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
         margin-bottom: 12px;
     }
 
-    /* 6. Sidebar armónico (#85888B) */
-    section[data-testid="stSidebar"] {
-        background-color: #85888B;
-        border-right: 2px solid #6E7174;
-    }
-    section[data-testid="stSidebar"] label {
-        color: #0F172A !important;
+    /* 5. Tarjetas contenedoras de columnas (#FFFFFF con sombra suave) */
+    div[data-testid="stColumn"] {
+        background-color: #FFFFFF;
+        padding: 22px;
+        border-radius: 14px;
+        border: 1px solid #E2E8F0;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        margin-bottom: 16px;
     }
 
-    /* 7. Pestañas de navegación superiores */
-    .stTabs [data-baseweb="tab-list"] {
-        gap: 6px;
-        background-color: #737679;
-        padding: 6px;
+    /* 6. Sidebar en Azul Slate Oscuro (#0F172A) */
+    section[data-testid="stSidebar"] {
+        background-color: #0F172A;
+        border-right: 1px solid #1E293B;
+    }
+    section[data-testid="stSidebar"] h1, 
+    section[data-testid="stSidebar"] h2, 
+    section[data-testid="stSidebar"] h3, 
+    section[data-testid="stSidebar"] h4,
+    section[data-testid="stSidebar"] label,
+    section[data-testid="stSidebar"] .stCaption {
+        color: #F8FAFC !important;
+    }
+
+    /* Tarjeta informativa dentro del Sidebar */
+    .sidebar-info-box {
+        background-color: #FFFFFF;
         border-radius: 10px;
-        overflow-x: auto;
+        padding: 14px;
+        border-left: 4px solid #4F46E5;
+        color: #334155;
+        font-size: 0.9rem;
+        line-height: 1.4;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        margin-bottom: 15px;
+    }
+
+    /* 7. Zona de Carga PDF (Drag & Drop) */
+    .stFileUploader section {
+        background-color: #1E293B !important;
+        border: 2px dashed #475569 !important;
+        border-radius: 10px !important;
+        padding: 10px !important;
+    }
+    .stFileUploader section div, .stFileUploader section span {
+        color: #CBD5E1 !important;
+    }
+
+    /* 8. Pestañas de navegación superiores (Tabs) */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 8px;
+        background-color: transparent;
+        padding: 4px;
+        border-bottom: 2px solid #E2E8F0;
     }
     .stTabs [data-baseweb="tab"] {
         height: 44px;
-        border-radius: 8px;
-        padding-left: 14px;
-        padding-right: 14px;
-        background-color: #ACAEB0;
-        border: 1px solid #636669;
+        border-radius: 8px 8px 0px 0px;
+        padding-left: 16px;
+        padding-right: 16px;
+        background-color: transparent;
+        border: none;
         font-weight: 700;
         font-size: 0.95rem;
-        color: #0F172A !important;
+        color: #64748B !important;
         white-space: nowrap;
     }
     .stTabs [aria-selected="true"] {
-        background-color: #1E3A8A !important;
-        border-color: #1E3A8A !important;
-        color: #FFFFFF !important;
+        background-color: #EEF2FF !important;
+        border-bottom: 3px solid #4F46E5 !important;
+        color: #4F46E5 !important;
     }
 
-    /* 8. Botón Principal de Acción (Verde Esmeralda Sobrio) */
+    /* 9. Botón Principal de Acción (Índigo / Púrpura Vivo #4F46E5) */
     .stButton>button {
-        background-color: #065F46 !important;
+        background-color: #4F46E5 !important;
         color: #FFFFFF !important;
         font-weight: 800 !important;
         font-size: 1.05rem !important;
         border-radius: 10px !important;
         padding: 0.75rem 1.25rem !important;
         border: none !important;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
+        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25) !important;
         transition: all 0.2s ease-in-out !important;
     }
     .stButton>button:hover {
-        background-color: #044E38 !important;
-        box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3) !important;
+        background-color: #4338CA !important;
+        box-shadow: 0 6px 16px rgba(79, 70, 229, 0.35) !important;
         color: #FFFFFF !important;
     }
 
-    /* 9. Entradas de Texto, Selects y Desplegables en Alto Contraste */
-    .stTextArea textarea, .stSelectbox div[data-baseweb="select"], .stFileUploader section {
+    /* 10. Entradas de texto y selects */
+    .stTextArea textarea, .stSelectbox div[data-baseweb="select"] {
         background-color: #F8FAFC !important;
         color: #0F172A !important;
         border-radius: 8px !important;
-        border: 1px solid #64748B !important;
+        border: 1px solid #CBD5E1 !important;
     }
-    .stTextArea textarea::placeholder {
-        color: #64748B !important;
+    .stTextArea textarea:focus, .stSelectbox div[data-baseweb="select"]:focus-within {
+        border-color: #4F46E5 !important;
+        box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.15) !important;
     }
     label {
         color: #0F172A !important;
         font-weight: 700 !important;
     }
 
-    /* 10. Ajustes para Teléfonos Móviles (Responsive) */
+    /* 11. Ajustes para Teléfonos Móviles (Responsive) */
     @media (max-width: 768px) {
         .sub-title {
             font-size: 0.95rem !important;
-            padding: 6px 12px;
+            padding: 8px 14px;
         }
         div[data-testid="stColumn"] {
-            padding: 12px;
+            padding: 14px;
         }
         .stTabs [data-baseweb="tab"] {
             padding-left: 10px;
@@ -171,10 +200,13 @@ st.markdown("""
 with st.sidebar:
     st.markdown('<span class="badge-tag">ASISTENTE DOCENTE IA</span>', unsafe_allow_html=True)
     st.subheader("💡 ¿Qué es AnotIA?")
-    st.info(
-        "AnotIA optimiza el trabajo administrativo docente convirtiendo notas rápidas "
-        "en redacciones formales, pedagógicas y alineadas al Reglamento Interno (RICE) de tu colegio."
-    )
+    
+    st.markdown("""
+    <div class="sidebar-info-box">
+        <strong>AnotIA</strong> optimiza el trabajo administrativo docente convirtiendo notas rápidas 
+        en redacciones formales, pedagógicas y alineadas al <strong>Reglamento Interno (RICE)</strong> de tu colegio.
+    </div>
+    """, unsafe_allow_html=True)
     
     st.markdown("---")
     st.subheader("📄 Reglamento Interno (RICE)")
@@ -195,7 +227,7 @@ with st.sidebar:
     )
     
     st.markdown("---")
-    st.caption("AnotIA v3.6 • Paleta Armónica")
+    st.caption("AnotIA v4.0 • Tema Claro Educativo")
 
 # Obtener la API Key exclusivamente de los Secrets del Servidor
 api_key_input = st.secrets.get("GEMINI_API_KEY", "")
