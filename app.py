@@ -24,89 +24,95 @@ if "favoritos" not in st.session_state:
 
 # Nombres de archivos de imágenes en tu repositorio
 IMAGE_LOGO = "Logo anotIA.png"
-IMAGE_GRAFICOS = "grafico.png"  # Renombra tu foto de gráficos a este nombre o cámbialo aquí
+IMAGE_GRAFICOS = "grafico.png"
 
 # =========================================================
-# ESTILOS CSS PERSONALIZADOS (DISEÑO VIBRANTE Y MODERNO)
+# ESTILOS CSS CON ALTO CONTRASTE Y LEGIBILIDAD EXCELENTE
 # =========================================================
 st.markdown("""
 <style>
-    /* Fondo general */
+    /* Fondo general claro */
     .stApp {
-        background-color: #F8FAFC;
+        background-color: #FFFFFF;
+        color: #0F172A;
     }
     
-    /* Encabezado e Insignia */
-    .badge-tag {
-        background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
-        color: white;
-        padding: 4px 12px;
-        border-radius: 20px;
-        font-size: 0.85rem;
-        font-weight: 700;
-        letter-spacing: 0.5px;
-        display: inline-block;
-        margin-bottom: 8px;
+    /* Encabezados y títulos principales */
+    h1, h2, h3, h4, h5, h6 {
+        color: #0F172A !important;
+        font-weight: 800 !important;
     }
     
+    /* Subtítulo de bienvenida */
     .sub-title {
-        color: #334155;
-        font-size: 1.25rem;
-        font-weight: 600;
+        color: #334155 !important;
+        font-size: 1.25rem !important;
+        font-weight: 600 !important;
         margin-top: 0.25rem;
         margin-bottom: 1.5rem;
     }
 
-    /* Botón Principal Llamativo */
+    /* Etiqueta / Insignia superior */
+    .badge-tag {
+        background-color: #1E40AF;
+        color: #FFFFFF;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 800;
+        letter-spacing: 0.5px;
+        display: inline-block;
+        margin-bottom: 10px;
+    }
+
+    /* Botón Principal de Alto Contraste */
     .stButton>button {
-        background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%) !important;
+        background-color: #059669 !important;
         color: #FFFFFF !important;
         font-weight: 800 !important;
         font-size: 1.1rem !important;
-        border-radius: 12px !important;
+        border-radius: 10px !important;
         padding: 0.75rem 1.5rem !important;
         border: none !important;
-        box-shadow: 0 4px 14px 0 rgba(255, 107, 107, 0.39) !important;
-        transition: all 0.3s ease !important;
+        box-shadow: 0 4px 6px -1px rgba(5, 150, 105, 0.4) !important;
+        transition: all 0.2s ease-in-out !important;
     }
     .stButton>button:hover {
-        transform: translateY(-2px) !important;
-        box-shadow: 0 6px 20px 0 rgba(255, 107, 107, 0.55) !important;
+        background-color: #047857 !important;
+        box-shadow: 0 6px 12px -2px rgba(4, 120, 87, 0.5) !important;
+        color: #FFFFFF !important;
     }
 
-    /* Pestañas Llamativas */
+    /* Estilo de Pestañas con Texto Oscuro Claramente Visible */
     .stTabs [data-baseweb="tab-list"] {
-        gap: 12px;
+        gap: 8px;
     }
     .stTabs [data-baseweb="tab"] {
-        height: 50px;
-        border-radius: 10px;
+        height: 48px;
+        border-radius: 8px;
         padding-left: 20px;
         padding-right: 20px;
-        background-color: #FFFFFF;
-        border: 2px solid #E2E8F0;
+        background-color: #F1F5F9;
+        border: 2px solid #CBD5E1;
         font-weight: 700;
-        color: #475569;
+        color: #1E293B !important;
     }
     .stTabs [aria-selected="true"] {
-        background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%) !important;
-        border-color: #6366F1 !important;
-        color: #4338CA !important;
+        background-color: #1E40AF !important;
+        border-color: #1E40AF !important;
+        color: #FFFFFF !important;
     }
 
-    /* Sidebar con Degradado */
+    /* Sidebar con fondo suave e imágenes/textos legibles */
     section[data-testid="stSidebar"] {
-        background-color: #FFFFFF;
+        background-color: #F8FAFC;
         border-right: 2px solid #E2E8F0;
     }
     
-    /* Contenedor Informativo RICE */
-    .info-box-rice {
-        background-color: #F0F9FF;
-        border-left: 5px solid #0284C7;
-        padding: 12px 16px;
-        border-radius: 8px;
-        margin-bottom: 15px;
+    /* Contenedores de opciones y entradas */
+    label {
+        color: #0F172A !important;
+        font-weight: 700 !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -139,7 +145,7 @@ with st.sidebar:
     )
     
     st.markdown("---")
-    st.caption("AnotIA v3.0 • Diseño Pedagógico Avanzado")
+    st.caption("AnotIA v3.1 • Alto Contraste Visual")
 
 # Obtener la API Key exclusivamente de los Secrets del Servidor
 api_key_input = st.secrets.get("GEMINI_API_KEY", "")
@@ -323,10 +329,9 @@ with tab_graficos:
     st.write("Visualización del marco conceptual y flujo metodológico aplicado por AnotIA para el análisis de convivencia y RICE.")
     
     if os.path.exists(IMAGE_GRAFICOS):
-        # Muestra la imagen a tamaño completo e impactante
         st.image(IMAGE_GRAFICOS, use_container_width=True, caption="Esquema y Referencia Visual del Sistema AnotIA")
     else:
-        st.warning(f"⚠️ Para visualizar tus gráficos aquí, guarda tu imagen en la carpeta del proyecto con el nombre exacto: `{IMAGE_GRAFICOS}` y súbela a GitHub.")
+        st.warning(f"⚠️ Guarda la imagen de tus gráficos como `{IMAGE_GRAFICOS}` en GitHub para visualizarla aquí.")
 
 # ----------------------------------------------------
 # PESTAÑA 3: HISTORIAL RECIENTE
