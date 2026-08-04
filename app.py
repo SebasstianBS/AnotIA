@@ -10,14 +10,13 @@ import os
 
 # Configuración de la página
 st.set_page_config(
-    page_title="AnotIA - Menos tiempo redactando, más tiempo enseñando",
-    page_icon="✏️",
+    page_title="Menos tiempo redactando, más tiempo enseñando",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
 # Nombre del archivo de imagen en tu repositorio
-IMAGE_FILENAME = "logo.png"
+IMAGE_FILENAME = "Logo anotIA.png"
 
 # Estilos CSS personalizados
 st.markdown("""
