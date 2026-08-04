@@ -10,7 +10,7 @@ import os
 
 # Configuración de la página
 st.set_page_config(
-    page_title="AnotIA - Menos tiempo redactando, más tiempo enseñando",
+    page_title="Menos tiempo redactando, más tiempo enseñando",
     page_icon="✏️",
     layout="wide",
     initial_sidebar_state="expanded"
