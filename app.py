@@ -27,7 +27,7 @@ IMAGE_LOGO = "Logo anotIA.png"
 IMAGE_GRAFICOS = "grafico.png"
 
 # =========================================================
-# ESTILOS CSS CON FONDO #939699 Y TARJETAS EN ALTO CONTRASTE
+# ESTILOS CSS RESPONSIVE Y ALTO CONTRASTE (OPTIMIZADO MÓVIL)
 # =========================================================
 st.markdown("""
 <style>
@@ -37,7 +37,7 @@ st.markdown("""
         color: #0F172A;
     }
     
-    /* Encabezados y títulos principales en blanco o azul oscuro según contenedor */
+    /* Encabezados y títulos principales */
     h1, h2, h3, h4, h5, h6 {
         color: #0F172A !important;
         font-weight: 800 !important;
@@ -46,11 +46,11 @@ st.markdown("""
     /* Subtítulo de bienvenida */
     .sub-title {
         color: #1E293B !important;
-        font-size: 1.25rem !important;
+        font-size: 1.15rem !important;
         font-weight: 700 !important;
         margin-top: 0.25rem;
-        margin-bottom: 1.5rem;
-        background-color: rgba(255, 255, 255, 0.85);
+        margin-bottom: 1.25rem;
+        background-color: rgba(255, 255, 255, 0.9);
         padding: 8px 16px;
         border-radius: 8px;
         display: inline-block;
@@ -74,9 +74,9 @@ st.markdown("""
         background-color: #059669 !important;
         color: #FFFFFF !important;
         font-weight: 800 !important;
-        font-size: 1.1rem !important;
+        font-size: 1.05rem !important;
         border-radius: 10px !important;
-        padding: 0.75rem 1.5rem !important;
+        padding: 0.75rem 1.25rem !important;
         border: none !important;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25) !important;
         transition: all 0.2s ease-in-out !important;
@@ -87,22 +87,25 @@ st.markdown("""
         color: #FFFFFF !important;
     }
 
-    /* Estilo de Pestañas con Fondo Blanco en Alto Contraste */
+    /* Estilo de Pestañas Adaptables */
     .stTabs [data-baseweb="tab-list"] {
-        gap: 8px;
-        background-color: rgba(255, 255, 255, 0.4);
+        gap: 6px;
+        background-color: rgba(255, 255, 255, 0.5);
         padding: 6px;
         border-radius: 10px;
+        overflow-x: auto;
     }
     .stTabs [data-baseweb="tab"] {
-        height: 48px;
+        height: 44px;
         border-radius: 8px;
-        padding-left: 20px;
-        padding-right: 20px;
+        padding-left: 14px;
+        padding-right: 14px;
         background-color: #FFFFFF;
         border: 2px solid #CBD5E1;
         font-weight: 700;
+        font-size: 0.95rem;
         color: #1E293B !important;
+        white-space: nowrap;
     }
     .stTabs [aria-selected="true"] {
         background-color: #1E40AF !important;
@@ -116,7 +119,6 @@ st.markdown("""
         border-right: 2px solid #CBD5E1;
     }
     
-    /* Contenedores de opciones y entradas */
     label {
         color: #0F172A !important;
         font-weight: 700 !important;
@@ -125,9 +127,26 @@ st.markdown("""
     /* Tarjeta contenedora para formularios */
     div[data-testid="stColumn"] {
         background-color: #FFFFFF;
-        padding: 20px;
+        padding: 16px;
         border-radius: 12px;
         box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        margin-bottom: 12px;
+    }
+
+    /* Ajustes específicos para pantallas de Teléfonos (Mobile) */
+    @media (max-width: 768px) {
+        .sub-title {
+            font-size: 0.95rem !important;
+            padding: 6px 12px;
+        }
+        div[data-testid="stColumn"] {
+            padding: 12px;
+        }
+        .stTabs [data-baseweb="tab"] {
+            padding-left: 10px;
+            padding-right: 10px;
+            font-size: 0.85rem;
+        }
     }
 </style>
 """, unsafe_allow_html=True)
@@ -160,29 +179,44 @@ with st.sidebar:
     )
     
     st.markdown("---")
-    st.caption("AnotIA v3.3 • Fondo #939699")
+    st.caption("AnotIA v3.4 • Diseño Responsive")
 
 # Obtener la API Key exclusivamente de los Secrets del Servidor
 api_key_input = st.secrets.get("GEMINI_API_KEY", "")
 
 # Encabezado Principal con Logo
 if os.path.exists(IMAGE_LOGO):
-    st.image(IMAGE_LOGO, width=340)
+    st.image(IMAGE_LOGO, width=280)
 else:
     st.markdown("## ✏️ **AnotIA**")
 
 st.markdown('<p class="sub-title"><i>"Menos tiempo redactando, más tiempo enseñando."</i></p>', unsafe_allow_html=True)
 
-# Pestañas Principales
-tab_generador, tab_graficos, tab_historial, tab_favoritos = st.tabs([
-    "📝 Generador", 
+# Pestañas Principales (GRÁFICOS PRIMERO)
+tab_graficos, tab_generador, tab_historial, tab_favoritos = st.tabs([
     "📊 Gráficos y Modelo Pedagógico", 
+    "📝 Generador", 
     "📜 Historial Reciente", 
     "⭐ Favoritos"
 ])
 
 # ----------------------------------------------------
-# PESTAÑA 1: GENERADOR PRINCIPAL
+# PESTAÑA 1: FOTO DE GRÁFICOS / MODELO PEDAGÓGICO
+# ----------------------------------------------------
+with tab_graficos:
+    st.subheader("📈 Esquema Pedagógico y Gráficos de Referencia")
+    st.write("Visualización del marco conceptual y flujo metodológico aplicado por AnotIA para el análisis de convivencia y RICE.")
+    
+    if os.path.exists(IMAGE_GRAFICOS):
+        # Despliegue centrado y en tamaño moderado (no gigante)
+        col_img1, col_img2, col_img3 = st.columns([1, 2, 1])
+        with col_img2:
+            st.image(IMAGE_GRAFICOS, use_container_width=True, caption="Esquema y Referencia Visual del Sistema AnotIA")
+    else:
+        st.warning(f"⚠️ Guarda la imagen de tus gráficos como `{IMAGE_GRAFICOS}` en GitHub para visualizarla aquí.")
+
+# ----------------------------------------------------
+# PESTAÑA 2: GENERADOR PRINCIPAL
 # ----------------------------------------------------
 with tab_generador:
     col1, col2 = st.columns([1, 1], gap="large")
@@ -211,7 +245,7 @@ with tab_generador:
         
         detalles = st.text_area(
             "Hechos u observaciones clave (palabras clave o borrador rápido)",
-            height=160,
+            height=150,
             placeholder="Ej: Durante la actividad de lenguaje, el alumno interrumpe constantemente a sus compañeros, se niega a realizar la guía y responde de forma desafiante al solicitárselo."
         )
 
@@ -274,7 +308,7 @@ with tab_generador:
                              * **Protocolo Sugerido:** [Pasos resumidos del procedimiento]
 
                         2. SEGUNDA PARTE (OPCIONES PARA LIBRO DE CLASES):
-                           - Presenta 2 opciones de redacción listas para copiar y pegar en el Libro de Clases:
+                           - Presenta 2 opciones de redacción listas para copiar y pagar en el Libro de Clases:
                              * **Opción A (Breve / Directa):** Ideal para libro de clases físico (espacio reducido) o plataformas con límite estricto de caracteres.
                              * **Opción B (Formativa / Descriptiva):** Ideal para libro de clases digital o registros que requieran mayor detalle y contexto formativo.
                            - Ambas opciones deben ser constructivas, neutras y fundamentadas pedagógicamente.
@@ -335,18 +369,6 @@ with tab_generador:
 
         else:
             st.info("👈 Selecciona el tipo de registro, ingresa los detalles y presiona el botón para generar.")
-
-# ----------------------------------------------------
-# PESTAÑA 2: FOTO DE GRÁFICOS / MODELO PEDAGÓGICO
-# ----------------------------------------------------
-with tab_graficos:
-    st.subheader("📈 Esquema Pedagógico y Gráficos de Referencia")
-    st.write("Visualización del marco conceptual y flujo metodológico aplicado por AnotIA para el análisis de convivencia y RICE.")
-    
-    if os.path.exists(IMAGE_GRAFICOS):
-        st.image(IMAGE_GRAFICOS, use_container_width=True, caption="Esquema y Referencia Visual del Sistema AnotIA")
-    else:
-        st.warning(f"⚠️ Guarda la imagen de tus gráficos como `{IMAGE_GRAFICOS}` en GitHub para visualizarla aquí.")
 
 # ----------------------------------------------------
 # PESTAÑA 3: HISTORIAL RECIENTE
