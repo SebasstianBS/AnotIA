@@ -22,82 +22,102 @@ if "historial" not in st.session_state:
 if "favoritos" not in st.session_state:
     st.session_state.favoritos = []
 
-# Nombre del archivo de imagen en el repositorio
-IMAGE_FILENAME = "Logo anotIA.png"
+# Nombres de archivos de imágenes en tu repositorio
+IMAGE_LOGO = "Logo anotIA.png"
+IMAGE_GRAFICOS = "grafico.png"  # Renombra tu foto de gráficos a este nombre o cámbialo aquí
 
 # =========================================================
-# ESTILOS CSS PERSONALIZADOS (DISEÑO Y COLORES)
+# ESTILOS CSS PERSONALIZADOS (DISEÑO VIBRANTE Y MODERNO)
 # =========================================================
 st.markdown("""
 <style>
-    /* Fondo general suave */
+    /* Fondo general */
     .stApp {
         background-color: #F8FAFC;
     }
     
-    /* Subtítulo principal */
+    /* Encabezado e Insignia */
+    .badge-tag {
+        background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+        color: white;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        display: inline-block;
+        margin-bottom: 8px;
+    }
+    
     .sub-title {
-        color: #475569;
-        font-size: 1.2rem;
-        font-weight: 500;
+        color: #334155;
+        font-size: 1.25rem;
+        font-weight: 600;
         margin-top: 0.25rem;
         margin-bottom: 1.5rem;
     }
-    
-    /* Estilo del botón principal */
+
+    /* Botón Principal Llamativo */
     .stButton>button {
-        background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
-        color: #FFFFFF;
-        font-weight: 700;
-        font-size: 1.05rem;
-        border-radius: 10px;
-        padding: 0.65rem 1.25rem;
-        border: none;
-        box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.25);
-        transition: all 0.2s ease-in-out;
+        background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%) !important;
+        color: #FFFFFF !important;
+        font-weight: 800 !important;
+        font-size: 1.1rem !important;
+        border-radius: 12px !important;
+        padding: 0.75rem 1.5rem !important;
+        border: none !important;
+        box-shadow: 0 4px 14px 0 rgba(255, 107, 107, 0.39) !important;
+        transition: all 0.3s ease !important;
     }
     .stButton>button:hover {
-        background: linear-gradient(135deg, #1D4ED8 0%, #1E40AF 100%);
-        box-shadow: 0 6px 12px -2px rgba(37, 99, 235, 0.35);
-        transform: translateY(-1px);
-        color: #FFFFFF;
-    }
-    
-    /* Pestañas personalizadas */
-    .stTabs [data-baseweb="tab-list"] {
-        gap: 8px;
-    }
-    .stTabs [data-baseweb="tab"] {
-        height: 48px;
-        border-radius: 8px;
-        padding-left: 16px;
-        padding-right: 16px;
-        background-color: #FFFFFF;
-        border: 1px solid #E2E8F0;
-        font-weight: 600;
-        color: #64748B;
-    }
-    .stTabs [aria-selected="true"] {
-        background-color: #EFF6FF !important;
-        border-color: #2563EB !important;
-        color: #1D4ED8 !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 6px 20px 0 rgba(255, 107, 107, 0.55) !important;
     }
 
-    /* Personalización del Sidebar */
+    /* Pestañas Llamativas */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 12px;
+    }
+    .stTabs [data-baseweb="tab"] {
+        height: 50px;
+        border-radius: 10px;
+        padding-left: 20px;
+        padding-right: 20px;
+        background-color: #FFFFFF;
+        border: 2px solid #E2E8F0;
+        font-weight: 700;
+        color: #475569;
+    }
+    .stTabs [aria-selected="true"] {
+        background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%) !important;
+        border-color: #6366F1 !important;
+        color: #4338CA !important;
+    }
+
+    /* Sidebar con Degradado */
     section[data-testid="stSidebar"] {
         background-color: #FFFFFF;
-        border-right: 1px solid #E2E8F0;
+        border-right: 2px solid #E2E8F0;
+    }
+    
+    /* Contenedor Informativo RICE */
+    .info-box-rice {
+        background-color: #F0F9FF;
+        border-left: 5px solid #0284C7;
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin-bottom: 15px;
     }
 </style>
 """, unsafe_allow_html=True)
 
 # Sidebar - Descripción de la herramienta y ajustes
 with st.sidebar:
+    st.markdown('<span class="badge-tag">ASISTENTE DOCENTE IA</span>', unsafe_allow_html=True)
     st.subheader("💡 ¿Qué es AnotIA?")
     st.info(
-        "AnotIA es un asistente inteligente diseñado para optimizar el trabajo administrativo docente. "
-        "Transforma observaciones y notas rápidas de aula en redacciones formales, pedagógicas e institucionales, "
-        "alineadas al Reglamento Interno de Convivencia Escolar (RICE) de tu establecimiento."
+        "AnotIA optimiza el trabajo administrativo docente convirtiendo notas rápidas "
+        "en redacciones formales, pedagógicas y alineadas al Reglamento Interno (RICE) de tu colegio."
     )
     
     st.markdown("---")
@@ -119,24 +139,29 @@ with st.sidebar:
     )
     
     st.markdown("---")
-    st.caption("AnotIA Beta v0.2 • Tono Pedagógico Permanente")
+    st.caption("AnotIA v3.0 • Diseño Pedagógico Avanzado")
 
 # Obtener la API Key exclusivamente de los Secrets del Servidor
 api_key_input = st.secrets.get("GEMINI_API_KEY", "")
 
-# Encabezado Principal
-if os.path.exists(IMAGE_FILENAME):
-    st.image(IMAGE_FILENAME, width=320)
+# Encabezado Principal con Logo
+if os.path.exists(IMAGE_LOGO):
+    st.image(IMAGE_LOGO, width=340)
 else:
     st.markdown("## ✏️ **AnotIA**")
 
 st.markdown('<p class="sub-title"><i>"Menos tiempo redactando, más tiempo enseñando."</i></p>', unsafe_allow_html=True)
 
-# Sistema de pestañas principales
-tab_generador, tab_historial, tab_favoritos = st.tabs(["📝 Generador", "📜 Historial Reciente", "⭐ Favoritos Guardados"])
+# Pestañas Principales
+tab_generador, tab_graficos, tab_historial, tab_favoritos = st.tabs([
+    "📝 Generador", 
+    "📊 Gráficos y Modelo Pedagógico", 
+    "📜 Historial Reciente", 
+    "⭐ Favoritos"
+])
 
 # ----------------------------------------------------
-# PESTAÑA 1: GENERADOR
+# PESTAÑA 1: GENERADOR PRINCIPAL
 # ----------------------------------------------------
 with tab_generador:
     col1, col2 = st.columns([1, 1], gap="large")
@@ -169,7 +194,7 @@ with tab_generador:
             placeholder="Ej: Durante la actividad de lenguaje, el alumno interrumpe constantemente a sus compañeros, se niega a realizar la guía y responde de forma desafiante al solicitárselo."
         )
 
-        generar_btn = st.button("✨ Generar Redacción Profesional", use_container_width=True)
+        generar_btn = st.button("🚀 Generar Redacción Profesional", use_container_width=True)
 
     with col2:
         st.subheader("📄 Propuesta de Redacción y Cita RICE")
@@ -291,7 +316,20 @@ with tab_generador:
             st.info("👈 Selecciona el tipo de registro, ingresa los detalles y presiona el botón para generar.")
 
 # ----------------------------------------------------
-# PESTAÑA 2: HISTORIAL RECIENTE
+# PESTAÑA 2: FOTO DE GRÁFICOS / MODELO PEDAGÓGICO
+# ----------------------------------------------------
+with tab_graficos:
+    st.subheader("📈 Esquema Pedagógico y Gráficos de Referencia")
+    st.write("Visualización del marco conceptual y flujo metodológico aplicado por AnotIA para el análisis de convivencia y RICE.")
+    
+    if os.path.exists(IMAGE_GRAFICOS):
+        # Muestra la imagen a tamaño completo e impactante
+        st.image(IMAGE_GRAFICOS, use_container_width=True, caption="Esquema y Referencia Visual del Sistema AnotIA")
+    else:
+        st.warning(f"⚠️ Para visualizar tus gráficos aquí, guarda tu imagen en la carpeta del proyecto con el nombre exacto: `{IMAGE_GRAFICOS}` y súbela a GitHub.")
+
+# ----------------------------------------------------
+# PESTAÑA 3: HISTORIAL RECIENTE
 # ----------------------------------------------------
 with tab_historial:
     st.subheader("📜 Historial de Anotaciones de la Sesión")
@@ -306,7 +344,6 @@ with tab_historial:
                 st.markdown("---")
                 st.markdown(item["resultado"])
                 
-                # Botón para guardar en Favoritos
                 if st.button(f"⭐ Guardar en Favoritos", key=f"fav_{idx}"):
                     if item not in st.session_state.favoritos:
                         st.session_state.favoritos.append(item)
@@ -315,7 +352,7 @@ with tab_historial:
                         st.warning("Este registro ya estaba en tus Favoritos.")
 
 # ----------------------------------------------------
-# PESTAÑA 3: FAVORITOS GUARDADOS
+# PESTAÑA 4: FAVORITOS GUARDADOS
 # ----------------------------------------------------
 with tab_favoritos:
     st.subheader("⭐ Mis Plantillas / Registros Favoritos")
