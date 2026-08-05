@@ -17,11 +17,15 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Inicialización de historial y favoritos en st.session_state
+# Inicialización de historial, favoritos y mensajes del chat
 if "historial" not in st.session_state:
     st.session_state.historial = []
 if "favoritos" not in st.session_state:
     st.session_state.favoritos = []
+if "chat_messages" not in st.session_state:
+    st.session_state.chat_messages = [
+        {"role": "assistant", "content": "¡Hola! 👋 Soy **AnotIA Chat**. ¿En qué puedo ayudarte hoy? Puedes hacerme consultas sobre estrategias de convivencia, ideas pedagógicas, donde conseguir el RICE de tu establecimiento o redactar dudas específicas."}
+    ]
 
 # Nombres de archivos de imágenes en el repositorio
 IMAGE_LOGO = "Logo anotIA.png"
@@ -49,7 +53,7 @@ st.markdown("""
         color: #1F2937;
     }
 
-    /* 3. Logo con estilo tipográfico SaaS (anot en #1F2937, IA con Gradiente) */
+    /* 3. Logo con estilo tipográfico SaaS */
     .logo-container {
         font-size: 2.2rem;
         font-weight: 800;
@@ -101,7 +105,7 @@ st.markdown("""
         margin-bottom: 16px;
     }
 
-    /* 7. Sidebar Oscuro (#111827) de Alta Elegancia */
+    /* 7. Sidebar Oscuro (#111827) */
     section[data-testid="stSidebar"] {
         background-color: #111827 !important;
         border-right: 1px solid #1F2937 !important;
@@ -151,7 +155,7 @@ st.markdown("""
         font-weight: 500 !important;
     }
 
-    /* 9. Pestañas de Navegación (Tabs Estilo Notion/Linear) */
+    /* 9. Pestañas de Navegación (Tabs) */
     .stTabs [data-baseweb="tab-list"] {
         gap: 8px;
         background-color: transparent;
@@ -182,7 +186,7 @@ st.markdown("""
         box-shadow: 0 4px 14px rgba(109, 93, 246, 0.3) !important;
     }
 
-    /* 10. Botón Principal con Gradiente Morado (#6D5DF6 -> #3B82F6) */
+    /* 10. Botón Principal */
     .stButton>button {
         background: linear-gradient(90deg, #6D5DF6 0%, #3B82F6 100%) !important;
         color: #FFFFFF !important;
@@ -201,13 +205,12 @@ st.markdown("""
         color: #FFFFFF !important;
     }
 
-    /* 11. Entradas de Texto, Radios y Selects */
+    /* 11. Entradas de Texto y Selects */
     .stTextArea textarea, .stSelectbox div[data-baseweb="select"] {
         background-color: #FFFFFF !important;
         color: #1F2937 !important;
         border-radius: 12px !important;
         border: 1px solid #D1D5DB !important;
-        transition: all 0.2s ease;
     }
     .stTextArea textarea:focus, .stSelectbox div[data-baseweb="select"]:focus-within {
         border-color: #6D5DF6 !important;
@@ -218,31 +221,10 @@ st.markdown("""
         font-weight: 600 !important;
         font-size: 0.92rem !important;
     }
-
-    /* 12. Alertas Estilo Minimalista SaaS */
-    .stAlert {
-        border-radius: 12px !important;
-        border: none !important;
-    }
-    div[data-baseweb="notification"] {
-        border-radius: 12px !important;
-    }
-
-    /* 13. Responsividad */
-    @media (max-width: 768px) {
-        div[data-testid="stColumn"] {
-            padding: 16px !important;
-        }
-        .stTabs [data-baseweb="tab"] {
-            padding-left: 12px;
-            padding-right: 12px;
-            font-size: 0.82rem;
-        }
-    }
 </style>
 """, unsafe_allow_html=True)
 
-# Sidebar - Estilo Dark SaaS (#111827)
+# Sidebar - Estilo Dark SaaS
 with st.sidebar:
     st.markdown("""
     <div class="logo-container" style="margin-bottom: 12px;">
@@ -279,7 +261,7 @@ with st.sidebar:
     )
     
     st.markdown("---")
-    st.caption("AnotIA v5.1 •")
+    st.caption("AnotIA v6.0 • Con Chat Inteligente")
 
 # Obtener la API Key exclusivamente de los Secrets del Servidor
 api_key_input = st.secrets.get("GEMINI_API_KEY", "")
@@ -296,10 +278,11 @@ else:
 
 st.markdown('<p class="sub-title"><i>Menos escritura. Más tiempo para enseñar.</i></p>', unsafe_allow_html=True)
 
-# Pestañas Principales (Los Gráficos van primero)
-tab_graficos, tab_generador, tab_historial, tab_favoritos = st.tabs([
+# Pestañas Principales (Añadido el Asistente Chat)
+tab_graficos, tab_generador, tab_chat, tab_historial, tab_favoritos = st.tabs([
     "📊 Estadísticas y Modelo", 
     "📝 Generador", 
+    "💬 Chat Asistente",
     "📜 Historial", 
     "⭐ Favoritos"
 ])
@@ -474,7 +457,55 @@ with tab_generador:
             st.info("👈 Selecciona el tipo de registro, ingresa los detalles y presiona el botón para generar.")
 
 # ----------------------------------------------------
-# PESTAÑA 3: HISTORIAL RECIENTE
+# PESTAÑA 3: CHAT ASISTENTE PEDAGÓGICO
+# ----------------------------------------------------
+with tab_chat:
+    st.subheader("💬 Asistente Conversacional AnotIA")
+    st.caption("Resuelve dudas pedagógicas en tiempo real o genera diálogos de apoyo formativo.")
+
+    # Renderizar historial de mensajes
+    for message in st.session_state.chat_messages:
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
+
+    # Entrada de texto del chat
+    if prompt_chat := st.chat_input("Escribe tu consulta pedagógica aquí..."):
+        # Mostrar el mensaje del usuario
+        st.session_state.chat_messages.append({"role": "user", "content": prompt_chat})
+        with st.chat_message("user"):
+            st.markdown(prompt_chat)
+
+        # Generar respuesta de la IA
+        with st.chat_message("assistant"):
+            if not api_key_input:
+                st.error("⚠️ Configura la clave GEMINI_API_KEY en los Secrets de la aplicación.")
+            else:
+                with st.spinner("Pensando respuesta..."):
+                    try:
+                        client = genai.Client(api_key=api_key_input)
+                        
+                        system_chat = f"""
+                        Eres AnotIA, un experto asistente pedagógico para docentes de Chile.
+                        Responde de forma concisa, clara, constructiva y respetuosa.
+                        Nivel educativo del establecimiento configurado: {nivel_educativo}.
+                        """
+                        
+                        response_chat = client.models.generate_content(
+                            model='gemini-2.5-flash',
+                            contents=prompt_chat,
+                            config=types.GenerateContentConfig(
+                                system_instruction=system_chat,
+                                temperature=0.3
+                            )
+                        )
+                        
+                        st.markdown(response_chat.text)
+                        st.session_state.chat_messages.append({"role": "assistant", "content": response_chat.text})
+                    except Exception as e:
+                        st.error(f"Error: {str(e)}")
+
+# ----------------------------------------------------
+# PESTAÑA 4: HISTORIAL RECIENTE
 # ----------------------------------------------------
 with tab_historial:
     st.subheader("📜 Historial de Anotaciones de la Sesión")
@@ -497,7 +528,7 @@ with tab_historial:
                         st.warning("Este registro ya estaba en tus Favoritos.")
 
 # ----------------------------------------------------
-# PESTAÑA 4: FAVORITOS GUARDADOS
+# PESTAÑA 5: FAVORITOS GUARDADOS
 # ----------------------------------------------------
 with tab_favoritos:
     st.subheader("⭐ Mis Plantillas / Registros Favoritos")
