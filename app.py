@@ -17,14 +17,21 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Inicialización de historial, favoritos y mensajes del chat
+# Inicialización de historial, favoritos y mensajes del chat en st.session_state
 if "historial" not in st.session_state:
     st.session_state.historial = []
 if "favoritos" not in st.session_state:
     st.session_state.favoritos = []
 if "chat_messages" not in st.session_state:
     st.session_state.chat_messages = [
-        {"role": "assistant", "content": "¡Hola! 👋 Soy **AnotIA Chat**. ¿En qué puedo ayudarte hoy? Puedes hacerme consultas sobre estrategias de convivencia, ideas pedagógicas, donde encontrar el RICE de tu establecimiento o redactar dudas específicas."}
+        {
+            "role": "assistant",
+            "content": (
+                "¡Hola! 👋 Soy tu **Asistente de Orientación Pedagógica y Convivencia Escolar**.\n\n"
+                "📌 **Mi rol exclusivo:** Orientarte en **estrategias de aula, pautas para entrevistas con apoderados, mediación y aplicación del RICE**.\n\n"
+                "💡 *Nota:* Si buscas redactar la anotación formal lista para copiar al Libro de Clases, te sugiero usar la pestaña **📝 Generador (Registro Oficial)**."
+            )
+        }
     ]
 
 # Nombres de archivos de imágenes en el repositorio
@@ -222,11 +229,7 @@ st.markdown("""
         font-size: 0.92rem !important;
     }
 
-    /* =========================================================
-       12. AJUSTES EXCLUSIVOS DE CHAT (LETRAS BLANCAS Y ALTO CONTRASTE)
-       ========================================================= */
-    
-    /* Contenedor de cada mensaje del chat */
+    /* 12. AJUSTES EXCLUSIVOS DE CHAT */
     [data-testid="stChatMessage"] {
         background-color: #FFFFFF !important;
         border: 1px solid #E5E7EB !important;
@@ -236,7 +239,7 @@ st.markdown("""
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02) !important;
     }
 
-    /* Mensajes emitidos por el Usuario (Profesor) */
+    /* Mensajes del usuario (Profesor) */
     [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) {
         background-color: #111827 !important;
         border-color: #1F2937 !important;
@@ -247,7 +250,7 @@ st.markdown("""
         color: #FFFFFF !important;
     }
 
-    /* Campo de entrada de texto del Chat (st.chat_input) */
+    /* Campo de entrada de texto del Chat */
     [data-testid="stChatInput"] {
         border-radius: 14px !important;
     }
@@ -258,6 +261,25 @@ st.markdown("""
         border-radius: 12px !important;
     }
     [data-testid="stChatInput"] textarea::placeholder {
+        color: #6B7280 !important;
+    }
+
+    /* Tarjetas sugeridas de orientación */
+    .guide-card {
+        background-color: #FFFFFF;
+        border: 1px solid #E5E7EB;
+        border-radius: 12px;
+        padding: 12px 16px;
+        margin-bottom: 12px;
+    }
+    .guide-card h5 {
+        margin: 0 0 4px 0 !important;
+        font-size: 0.95rem !important;
+        color: #6D5DF6 !important;
+    }
+    .guide-card p {
+        margin: 0 !important;
+        font-size: 0.85rem !important;
         color: #6B7280 !important;
     }
 </style>
@@ -276,8 +298,9 @@ with st.sidebar:
     
     st.markdown("""
     <div class="sidebar-info-box">
-        <strong>AnotIA</strong> optimiza el trabajo administrativo docente convirtiendo notas rápidas 
-        en redacciones formales, pedagógicas y alineadas al <strong>Reglamento Interno (RICE)</strong> de tu colegio.
+        <strong>AnotIA</strong> es la plataforma integral para optimizar la labor docente:<br><br>
+        • <strong>📝 Generador:</strong> Para redacción de registros oficiales del Libro de Clases.<br>
+        • <strong>💬 Orientación:</strong> Asistente conversacional de estrategia y convivencia escolar.
     </div>
     """, unsafe_allow_html=True)
     
@@ -300,7 +323,7 @@ with st.sidebar:
     )
     
     st.markdown("---")
-    st.caption("AnotIA v6.1 • Chat Visualmente Optimizado")
+    st.caption("AnotIA v6.3 •")
 
 # Obtener la API Key exclusivamente de los Secrets del Servidor
 api_key_input = st.secrets.get("GEMINI_API_KEY", "")
@@ -317,11 +340,11 @@ else:
 
 st.markdown('<p class="sub-title"><i>Menos escritura. Más tiempo para enseñar.</i></p>', unsafe_allow_html=True)
 
-# Pestañas Principales
+# Pestañas Principales (Gráficos van primero)
 tab_graficos, tab_generador, tab_chat, tab_historial, tab_favoritos = st.tabs([
     "📊 Estadísticas y Modelo", 
-    "📝 Generador", 
-    "💬 Chat Asistente",
+    "📝 Generador (Registro Oficial)", 
+    "💬 Asistente de Orientación",
     "📜 Historial", 
     "⭐ Favoritos"
 ])
@@ -341,13 +364,14 @@ with tab_graficos:
         st.warning(f"⚠️ Guarda la imagen de tus gráficos como `{IMAGE_GRAFICOS}` en GitHub para visualizarla aquí.")
 
 # ----------------------------------------------------
-# PESTAÑA 2: GENERADOR PRINCIPAL
+# PESTAÑA 2: GENERADOR PRINCIPAL (REGISTRO OFICIAL)
 # ----------------------------------------------------
 with tab_generador:
     col1, col2 = st.columns([1, 1], gap="large")
 
     with col1:
         st.subheader("📋 Datos de la Observación")
+        st.caption("Transforma apuntes rápidos en redacciones estructuradas para el Libro de Clases.")
         
         tipo_anotacion = st.radio(
             "Tipo de Anotación / Registro",
@@ -374,7 +398,7 @@ with tab_generador:
             placeholder="Ej: Durante la actividad de lenguaje, el alumno interrumpe constantemente a sus compañeros, se niega a realizar la guía y responde de forma desafiante al solicitárselo."
         )
 
-        generar_btn = st.button("✨ Generar Redacción Profesional", use_container_width=True)
+        generar_btn = st.button("✨ Generar Redacción Oficial", use_container_width=True)
 
     with col2:
         st.subheader("📄 Propuesta de Redacción y Cita RICE")
@@ -496,37 +520,99 @@ with tab_generador:
             st.info("👈 Selecciona el tipo de registro, ingresa los detalles y presiona el botón para generar.")
 
 # ----------------------------------------------------
-# PESTAÑA 3: CHAT ASISTENTE PEDAGÓGICO
+# PESTAÑA 3: CHAT ASISTENTE (ORIENTACIÓN Y ESTRATEGIA)
 # ----------------------------------------------------
 with tab_chat:
-    st.subheader("💬 Asistente Conversacional AnotIA")
-    st.caption("Resuelve dudas pedagógicas en tiempo real o genera diálogos de apoyo formativo.")
+    st.subheader("💬 Asistente de Orientación y Convivencia Escolar")
+    st.caption("Obtén asesoría estratégica, guiones para apoderados y resolución de dudas pedagógicas.")
 
-    # Renderizar historial de mensajes
+    # Tarjetas de rol
+    col_g1, col_g2, col_g3 = st.columns(3)
+    with col_g1:
+        st.markdown("""
+        <div class="guide-card">
+            <h5>🎯 Estrategias de Aula</h5>
+            <p>Pregunta por acciones preventivas o manejo de conductas disruptivas específicas.</p>
+        </div>
+        """, unsafe_allow_html=True)
+    with col_g2:
+        st.markdown("""
+        <div class="guide-card">
+            <h5>🗣️ Guiones de Entrevista</h5>
+            <p>Pide pautas formativas para abordar temas delicados con apoderados o estudiantes.</p>
+        </div>
+        """, unsafe_allow_html=True)
+    with col_g3:
+        st.markdown("""
+        <div class="guide-card">
+            <h5>📖 Asesoría RICE</h5>
+            <p>Resuelve dudas sobre protocolos de convivencia y conductos regulares.</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+    # Botones de sugerencias de un solo clic (Prompt Starters)
+    st.write("💡 **Consultas frecuentes de orientación:**")
+    col_s1, col_s2, col_s3 = st.columns(3)
+
+    if col_s1.button("👉 Estrategia para alumno disruptivo"):
+        st.session_state.chat_messages.append({
+            "role": "user", 
+            "content": "¿Qué estrategia formativa de aula puedo aplicar con un estudiante que interrumpe constantemente la clase?"
+        })
+        st.rerun()
+
+    if col_s2.button("👉 Guión para entrevista con apoderado"):
+        st.session_state.chat_messages.append({
+            "role": "user", 
+            "content": "¿Cómo puedo estructurar una reunión con un apoderado para informarle sobre faltas de respeto recurrentes sin generar conflicto?"
+        })
+        st.rerun()
+
+    if col_s3.button("👉 Paso a paso ante falta grave (RICE)"):
+        st.session_state.chat_messages.append({
+            "role": "user", 
+            "content": "¿Cuál es el procedimiento o conducto regular habitual según el RICE ante una agresión verbal entre estudiantes?"
+        })
+        st.rerun()
+
+    st.markdown("---")
+
+    # Renderizar historial de mensajes del chat
     for message in st.session_state.chat_messages:
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
 
     # Entrada de texto del chat
-    if prompt_chat := st.chat_input("Escribe tu consulta pedagógica aquí..."):
-        # Mostrar el mensaje del usuario
+    if prompt_chat := st.chat_input("Escribe tu consulta sobre estrategias de aula, apoderados o RICE..."):
         st.session_state.chat_messages.append({"role": "user", "content": prompt_chat})
         with st.chat_message("user"):
             st.markdown(prompt_chat)
 
-        # Generar respuesta de la IA
+        # Generar respuesta de la IA con restricciones de dominio estricta
         with st.chat_message("assistant"):
             if not api_key_input:
                 st.error("⚠️ Configura la clave GEMINI_API_KEY en los Secrets de la aplicación.")
             else:
-                with st.spinner("Pensando respuesta..."):
+                with st.spinner("Consultando marco de orientación pedagógica..."):
                     try:
                         client = genai.Client(api_key=api_key_input)
                         
                         system_chat = f"""
-                        Eres AnotIA, un experto asistente pedagógico para docentes de Chile.
-                        Responde de forma concisa, clara, constructiva y respetuosa.
-                        Nivel educativo del establecimiento configurado: {nivel_educativo}.
+                        Eres el Asistente de Orientación Pedagógica y Convivencia Escolar de AnotIA (Chile).
+
+                        REGLA DE DOMINIO Y RESTRICCIÓN DE ÁMBITO (MANDATORIA):
+                        - Tu ÚNICO campo de actuación es la pedagogía, convivencia escolar, RICE, estrategias de aula y gestión con apoderados/estudiantes.
+                        - SI EL USUARIO HACE PREGUNTAS AJENAS A ESTOS TEMAS (ej. recetas de cocina, cultura general, programación general, opiniones personales, noticias, deportes, entretenimiento, etc.):
+                          1. NO intentes responder la consulta ajena.
+                          2. Declina amablemente la solicitud recordando tu propósito.
+                          3. Redirige al docente hacia cómo puedes ayudarle en el ámbito educativo.
+
+                        Ejemplo de respuesta cuando la consulta está fuera de ámbito:
+                        "Como asistente de AnotIA, estoy especializado exclusivamente en orientación pedagógica, convivencia escolar y RICE. ¿Hay alguna duda sobre estrategias de aula, entrevistas con apoderados o gestión de convivencia en la que te pueda orientar hoy?"
+
+                        Pautas de contexto:
+                        - Nivel Educativo configurado: {nivel_educativo}.
+                        - Si el docente solicita redactar una anotación formal final para el libro de clases, recuérdale que la pestaña '📝 Generador (Registro Oficial)' está diseñada específicamente para esa función.
                         """
                         
                         response_chat = client.models.generate_content(
@@ -534,7 +620,7 @@ with tab_chat:
                             contents=prompt_chat,
                             config=types.GenerateContentConfig(
                                 system_instruction=system_chat,
-                                temperature=0.3
+                                temperature=0.1
                             )
                         )
                         
