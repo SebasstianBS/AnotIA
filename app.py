@@ -24,7 +24,7 @@ if "favoritos" not in st.session_state:
     st.session_state.favoritos = []
 if "chat_messages" not in st.session_state:
     st.session_state.chat_messages = [
-        {"role": "assistant", "content": "¡Hola! 👋 Soy **AnotIA Chat**. ¿En qué puedo ayudarte hoy? Puedes hacerme consultas sobre estrategias de convivencia, ideas pedagógicas, donde conseguir el RICE de tu establecimiento o redactar dudas específicas."}
+        {"role": "assistant", "content": "¡Hola! 👋 Soy **AnotIA Chat**. ¿En qué puedo ayudarte hoy? Puedes hacerme consultas sobre estrategias de convivencia, ideas pedagógicas, donde encontrar el RICE de tu establecimiento o redactar dudas específicas."}
     ]
 
 # Nombres de archivos de imágenes en el repositorio
@@ -32,7 +32,7 @@ IMAGE_LOGO = "Logo anotIA.png"
 IMAGE_GRAFICOS = "grafico.png"
 
 # =========================================================
-# ESTILOS CSS - ESTILO SAAS MODERNO (LINEAR / NOTION AI)
+# ESTILOS CSS - ESTILO SAAS MODERNO CON CHAT DE ALTO CONTRASTE
 # =========================================================
 st.markdown("""
 <style>
@@ -205,7 +205,7 @@ st.markdown("""
         color: #FFFFFF !important;
     }
 
-    /* 11. Entradas de Texto y Selects */
+    /* 11. Entradas de Texto y Selects General */
     .stTextArea textarea, .stSelectbox div[data-baseweb="select"] {
         background-color: #FFFFFF !important;
         color: #1F2937 !important;
@@ -220,6 +220,45 @@ st.markdown("""
         color: #1F2937 !important;
         font-weight: 600 !important;
         font-size: 0.92rem !important;
+    }
+
+    /* =========================================================
+       12. AJUSTES EXCLUSIVOS DE CHAT (LETRAS BLANCAS Y ALTO CONTRASTE)
+       ========================================================= */
+    
+    /* Contenedor de cada mensaje del chat */
+    [data-testid="stChatMessage"] {
+        background-color: #FFFFFF !important;
+        border: 1px solid #E5E7EB !important;
+        border-radius: 14px !important;
+        padding: 14px 18px !important;
+        margin-bottom: 12px !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02) !important;
+    }
+
+    /* Mensajes emitidos por el Usuario (Profesor) */
+    [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) {
+        background-color: #111827 !important;
+        border-color: #1F2937 !important;
+    }
+    [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) p,
+    [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) div,
+    [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) span {
+        color: #FFFFFF !important;
+    }
+
+    /* Campo de entrada de texto del Chat (st.chat_input) */
+    [data-testid="stChatInput"] {
+        border-radius: 14px !important;
+    }
+    [data-testid="stChatInput"] textarea {
+        background-color: #FFFFFF !important;
+        color: #1F2937 !important;
+        font-weight: 500 !important;
+        border-radius: 12px !important;
+    }
+    [data-testid="stChatInput"] textarea::placeholder {
+        color: #6B7280 !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -261,7 +300,7 @@ with st.sidebar:
     )
     
     st.markdown("---")
-    st.caption("AnotIA v6.0 • Con Chat Inteligente")
+    st.caption("AnotIA v6.1 • Chat Visualmente Optimizado")
 
 # Obtener la API Key exclusivamente de los Secrets del Servidor
 api_key_input = st.secrets.get("GEMINI_API_KEY", "")
@@ -278,7 +317,7 @@ else:
 
 st.markdown('<p class="sub-title"><i>Menos escritura. Más tiempo para enseñar.</i></p>', unsafe_allow_html=True)
 
-# Pestañas Principales (Añadido el Asistente Chat)
+# Pestañas Principales
 tab_graficos, tab_generador, tab_chat, tab_historial, tab_favoritos = st.tabs([
     "📊 Estadísticas y Modelo", 
     "📝 Generador", 
