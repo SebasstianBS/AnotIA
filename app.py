@@ -1,14 +1,15 @@
 """
 AnotIA - Asistente de Redacción de Anotaciones Pedagógicas con RICE e IA
 Prototipo MVP construido con Streamlit y la API de Google Gemini (google-genai).
-Estilo Minimalista SaaS (Notion AI / Linear / OpenAI)
+Estilo Minimalista SaaS con Guardado Institucional de RICE y Context Caching.
 """
 
 import streamlit as st
 import google.genai as genai
 from google.genai import types
 import os
-from datetime import datetime
+import datetime
+import re
 
 # Configuración de la página
 st.set_page_config(
@@ -17,7 +18,15 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Inicialización de historial, favoritos y mensajes del chat en st.session_state
+# Crear directorio local para almacenar los RICE institucionales si no existe
+RICE_DIR = "rices_guardados"
+os.makedirs(RICE_DIR, exist_ok=True)
+
+# Función auxiliar para sanitizar nombres de archivos
+def sanitizar_nombre(nombre):
+    return re.sub(r'[^a-zA-Z0-9_-]', '_', nombre.strip().lower())
+
+# Inicialización de historial, favoritos y mensajes del chat
 if "historial" not in st.session_state:
     st.session_state.historial = []
 if "favoritos" not in st.session_state:
@@ -39,7 +48,7 @@ IMAGE_LOGO = "Logo anotIA.png"
 IMAGE_GRAFICOS = "grafico.png"
 
 # =========================================================
-# ESTILOS CSS - ESTILO SAAS MODERNO CON CHAT DE ALTO CONTRASTE
+# ESTILOS CSS - SAAS MODERNO CON ALTO CONTRASTE
 # =========================================================
 st.markdown("""
 <style>
@@ -285,7 +294,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Sidebar - Estilo Dark SaaS
+# Sidebar - Estilo Dark SaaS con Gestión de Colegio y RICE
 with st.sidebar:
     st.markdown("""
     <div class="logo-container" style="margin-bottom: 12px;">
@@ -305,17 +314,52 @@ with st.sidebar:
     """, unsafe_allow_html=True)
     
     st.markdown("---")
-    st.subheader("📄 Reglamento Interno (RICE)")
-    uploaded_rice = st.file_uploader(
-        "Subir PDF del RICE / Reglamento (Opcional)",
-        type=["pdf"],
-        help="Sube el documento PDF del colegio para que la IA cite exactamente la falta y el punto del reglamento."
+    st.subheader("🏫 Selección de Colegio y RICE")
+
+    # Listar los colegios ya guardados localmente
+    archivos_guardados = [f for f in os.listdir(RICE_DIR) if f.endswith(".pdf")]
+    opciones_colegios = [f.replace(".pdf", "").replace("_", " ").title() for f in archivos_guardados]
+    opciones_colegios.append("➕ Registrar Nuevo Colegio")
+
+    colegio_seleccionado = st.selectbox(
+        "Elige tu Establecimiento",
+        opciones_colegios,
+        help="Selecciona tu colegio para activar automáticamente su RICE institucional sin volver a subir archivos."
     )
-    if uploaded_rice:
-        st.success("✅ RICE cargado correctamente")
-    
+
+    pdf_path_activo = None
+
+    if colegio_seleccionado == "➕ Registrar Nuevo Colegio":
+        nombre_nuevo_colegio = st.text_input("Nombre del Colegio / Establecimiento", placeholder="Ej: Colegio San Agustín")
+        uploaded_rice = st.file_uploader(
+            "Subir PDF del RICE / Reglamento",
+            type=["pdf"],
+            help="Sube el PDF una sola vez. Quedará guardado para tu colegio."
+        )
+
+        if st.button("💾 Guardar RICE del Colegio", use_container_width=True):
+            if not nombre_nuevo_colegio.strip():
+                st.error("⚠️ Ingresa el nombre del colegio.")
+            elif not uploaded_rice:
+                st.error("⚠️ Sube un archivo PDF del RICE.")
+            else:
+                nombre_slug = sanitizar_nombre(nombre_nuevo_colegio)
+                pdf_path_activo = os.path.join(RICE_DIR, f"{nombre_slug}.pdf")
+                
+                # Guardar el PDF en el servidor local
+                with open(pdf_path_activo, "wb") as f:
+                    f.write(uploaded_rice.getvalue())
+                
+                st.success(f"✅ ¡RICE de {nombre_nuevo_colegio} guardado exitosamente!")
+                st.rerun()
+    else:
+        # Recuperar la ruta del PDF guardado
+        nombre_slug = sanitizar_nombre(colegio_seleccionado)
+        pdf_path_activo = os.path.join(RICE_DIR, f"{nombre_slug}.pdf")
+        st.info(f"📄 **RICE Activo:** {colegio_seleccionado}")
+
     st.markdown("---")
-    st.subheader("📌 Ajustes del Colegio")
+    st.subheader("📌 Ajustes de Aula")
     
     nivel_educativo = st.selectbox(
         "Nivel Educativo",
@@ -323,7 +367,7 @@ with st.sidebar:
     )
     
     st.markdown("---")
-    st.caption("AnotIA v6.4 • Integración Cita RICE")
+    st.caption("AnotIA v7.0 • RICE Institucional Permanente")
 
 # Obtener la API Key exclusivamente de los Secrets del Servidor
 api_key_input = st.secrets.get("GEMINI_API_KEY", "")
@@ -409,28 +453,43 @@ with tab_generador:
             elif not detalles.strip():
                 st.warning("⚠️ Ingresa al menos unas cuantas palabras clave sobre el hecho observado.")
             else:
-                with st.spinner("🤖 AnotIA está analizando la información y redactando con enfoque pedagógico..."):
+                with st.spinner("🤖 AnotIA está procesando el RICE y redactando con enfoque pedagógico..."):
                     try:
                         client = genai.Client(api_key=api_key_input)
-                        contents_payload = []
                         
-                        if uploaded_rice:
-                            pdf_bytes = uploaded_rice.getvalue()
-                            contents_payload.append(
-                                types.Part.from_bytes(
-                                    data=pdf_bytes,
-                                    mime_type="application/pdf"
+                        cached_content_name = None
+                        instruccion_rice = ""
+
+                        # Verificación y optimización mediante Context Caching si existe PDF del colegio
+                        if pdf_path_activo and os.path.exists(pdf_path_activo):
+                            cache_session_key = f"cache_{os.path.basename(pdf_path_activo)}"
+                            
+                            # Si no hay caché activo en la sesión actual, se crea en Gemini
+                            if cache_session_key not in st.session_state:
+                                archivo_subido = client.files.upload(
+                                    file=pdf_path_activo,
+                                    config=dict(mime_type='application/pdf')
                                 )
-                            )
+                                cache = client.caches.create(
+                                    model='gemini-2.5-flash',
+                                    config=types.CreateCachedContentConfig(
+                                        contents=[archivo_subido],
+                                        ttl=datetime.timedelta(hours=24), # Caché activo por 24 horas
+                                        display_name=f"RICE_{colegio_seleccionado}"
+                                    )
+                                )
+                                st.session_state[cache_session_key] = cache.name
+
+                            cached_content_name = st.session_state[cache_session_key]
                             instruccion_rice = (
-                                "Cuentas con el documento oficial del Reglamento Interno (RICE) adjunto. "
+                                f"Cuentas con el documento RICE institucional de {colegio_seleccionado} cargado en caché. "
                                 "Si la consulta es una 'Anotación Negativa', debes BUSCAR CUIDADOSAMENTE en el texto del PDF e IDENTIFICAR "
                                 "el punto exacto (Artículo, Número, Letra, Título, Capítulo o Inciso) donde se tipifica la falta cometida, "
                                 "citándolo de forma explícita e INTEGRÁNDOLO directamente en la redacción de cada opción para el Libro de Clases."
                             )
                         else:
                             instruccion_rice = (
-                                "No hay un documento RICE adjunto. En la cita del RICE e integrada en cada opción de redacción, indica '(Referencia RICE: Verificar artículo/punto en reglamento interno del establecimiento)'."
+                                "No hay un documento RICE subido para este colegio. En la cita del RICE e integrada en cada opción de redacción, indica '(Referencia RICE: Verificar artículo/punto en reglamento interno del establecimiento)'."
                             )
 
                         system_instruction = f"""
@@ -443,6 +502,7 @@ with tab_generador:
                         - En registros de faltas o conductas negativas, centra la redacción en la descripción objetiva de los hechos, las oportunidades de mejora, la responsabilidad formativa y los compromisos a asumir.
 
                         Pautas del Establecimiento:
+                        - Colegio: {colegio_seleccionado}
                         - Nivel Educativo: {nivel_educativo}
                         - {instruccion_rice}
 
@@ -489,15 +549,19 @@ with tab_generador:
                         - Hechos descritos: {detalles}
                         """
 
-                        contents_payload.append(prompt)
+                        # Configuración con o sin Caché
+                        config_gen = types.GenerateContentConfig(
+                            system_instruction=system_instruction,
+                            temperature=0.2,
+                        )
+                        
+                        if cached_content_name:
+                            config_gen.cached_content = cached_content_name
 
                         response = client.models.generate_content(
                             model='gemini-2.5-flash',
-                            contents=contents_payload,
-                            config=types.GenerateContentConfig(
-                                system_instruction=system_instruction,
-                                temperature=0.2,
-                            )
+                            contents=prompt,
+                            config=config_gen
                         )
 
                         resultado_texto = response.text
@@ -506,7 +570,7 @@ with tab_generador:
 
                         # Guardar el registro en el historial local
                         registro_nuevo = {
-                            "fecha": datetime.now().strftime("%d/%m/%Y %H:%M"),
+                            "fecha": datetime.datetime.now().strftime("%d/%m/%Y %H:%M"),
                             "tipo": tipo_anotacion,
                             "categoria": asunto_categoria,
                             "entrada": detalles,
@@ -608,10 +672,8 @@ with tab_chat:
                           2. Declina amablemente la solicitud recordando tu propósito.
                           3. Redirige al docente hacia cómo puedes ayudarle en el ámbito educativo.
 
-                        Ejemplo de respuesta cuando la consulta está fuera de ámbito:
-                        "Como asistente de AnotIA, estoy especializado exclusivamente en orientación pedagógica, convivencia escolar y RICE. ¿Hay alguna duda sobre estrategias de aula, entrevistas con apoderados o gestión de convivencia en la que te pueda orientar hoy?"
-
                         Pautas de contexto:
+                        - Colegio Activo: {colegio_seleccionado}
                         - Nivel Educativo configurado: {nivel_educativo}.
                         - Si el docente solicita redactar una anotación formal final para el libro de clases, recuérdale que la pestaña '📝 Generador (Registro Oficial)' está diseñada específicamente para esa función.
                         """
