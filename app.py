@@ -323,7 +323,7 @@ with st.sidebar:
     )
     
     st.markdown("---")
-    st.caption("AnotIA v6.3 •")
+    st.caption("AnotIA v6.4 • Integración Cita RICE")
 
 # Obtener la API Key exclusivamente de los Secrets del Servidor
 api_key_input = st.secrets.get("GEMINI_API_KEY", "")
@@ -426,11 +426,11 @@ with tab_generador:
                                 "Cuentas con el documento oficial del Reglamento Interno (RICE) adjunto. "
                                 "Si la consulta es una 'Anotación Negativa', debes BUSCAR CUIDADOSAMENTE en el texto del PDF e IDENTIFICAR "
                                 "el punto exacto (Artículo, Número, Letra, Título, Capítulo o Inciso) donde se tipifica la falta cometida, "
-                                "citándolo de forma explícita."
+                                "citándolo de forma explícita e INTEGRÁNDOLO directamente en la redacción de cada opción para el Libro de Clases."
                             )
                         else:
                             instruccion_rice = (
-                                "No hay un documento RICE adjunto. Indica 'RICE no adjunto (Verificar artículo en reglamento interno)'."
+                                "No hay un documento RICE adjunto. En la cita del RICE e integrada en cada opción de redacción, indica '(Referencia RICE: Verificar artículo/punto en reglamento interno del establecimiento)'."
                             )
 
                         system_instruction = f"""
@@ -453,13 +453,14 @@ with tab_generador:
                            - Título exacto: "### 📌 1. Fundamento y Tipificación según RICE"
                            - Solo incluye estas 3 líneas simples:
                              * **Falta / Situación Identificada:** [Descripción técnica y objetiva súper breve]
-                             * **Ubicación en RICE (Punto / Artículo / Letra):** [Cita exacta del RICE según PDF, ej. Artículo 12, N°3, Letra b]
+                             * **Ubicación en RICE (Punto / Artículo / Letra):** [Cita exacta del RICE según PDF o nota genérica si no hay PDF]
                              * **Protocolo Sugerido:** [Pasos resumidos del procedimiento]
 
-                        2. SEGUNDA PARTE (OPCIONES PARA LIBRO DE CLASES):
-                           - Presenta 2 opciones de redacción listas para copiar y pegar en el Libro de Clases:
-                             * **Opción A (Breve / Directa):** Ideal para libro de clases físico (espacio reducido) o plataformas con límite estricto de caracteres.
-                             * **Opción B (Formativa / Descriptiva):** Ideal para libro de clases digital o registros que requieran mayor detalle y contexto formativo.
+                        2. SEGUNDA PARTE (OPCIONES PARA LIBRO DE CLASES CON CITA RICE INTEGRADA):
+                           - Presenta 2 opciones de redacción listas para copiar y pegar en el Libro de Clases.
+                           - OBLIGATORIO: Ambas opciones DEBEN INCLUIR DENTRO DEL TEXTO REDACTADO la referencia/cita del punto exacto del RICE (ej. "[Según RICE Art. 14, N° 2, Letra b]").
+                             * **Opción A (Breve / Directa):** Ideal para libro de clases físico (espacio reducido) o plataformas con límite estricto de caracteres. Incluye la cita RICE de forma sintética al final o al inicio del texto.
+                             * **Opción B (Formativa / Descriptiva):** Ideal para libro de clases digital. Incluye la cita RICE contextualizada dentro del cuerpo del texto formativo.
                            - Ambas opciones deben ser constructivas, neutras y fundamentadas pedagógicamente.
                         """
 
@@ -476,10 +477,10 @@ with tab_generador:
                         ### 📝 2. Opciones de Redacción para el Libro de Clases (Físico / Digital)
 
                         #### 🔹 Opción A: Redacción Breve y Directa (Ideal para Libro Físico / Espacio acotado)
-                        > [Escribe aquí el texto sintético, constructivo y profesional listo para copiar]
+                        > [Escribe aquí el texto sintético, constructivo y profesional listo para copiar, INCLUYENDO la cita o referencia explícita del punto del RICE]
 
                         #### 🔹 Opción B: Redacción Formativa y Descriptiva (Ideal para Libro Digital)
-                        > [Escribe aquí el texto detallado, pedagógico, formativo y formal listo para copiar]
+                        > [Escribe aquí el texto detallado, pedagógico, formativo y formal listo para copiar, INCLUYENDO la cita o referencia explícita del punto del RICE]
                         ---
 
                         Datos ingresados por el docente:
